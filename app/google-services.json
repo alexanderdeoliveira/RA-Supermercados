@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "1025875273368",
+    "firebase_url": "https://supermercados-b8f99.firebaseio.com",
+    "project_id": "supermercados-b8f99",
+    "storage_bucket": "supermercados-b8f99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025875273368:android:2696f5f9cf2357ca",
+        "android_client_info": {
+          "package_name": "com.rasupermercados.br"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025875273368-2j9um4gmjnc2csrr7ad6lmqrdni0s5q6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO4lN0QAGq5J7PMlBSyB76Ok4ki43zb1s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025875273368:android:356a42f38138e45f",
+        "android_client_info": {
+          "package_name": "com.rasupermercados.rasupermercados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025875273368-o29sodnuerr194v0112oqmpupl49mn6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rasupermercados.rasupermercados",
+            "certificate_hash": "bb5b69c9c0a5a5e4a79567a567fe68066494f29c"
+          }
+        },
+        {
+          "client_id": "1025875273368-2j9um4gmjnc2csrr7ad6lmqrdni0s5q6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO4lN0QAGq5J7PMlBSyB76Ok4ki43zb1s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025875273368-2j9um4gmjnc2csrr7ad6lmqrdni0s5q6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
