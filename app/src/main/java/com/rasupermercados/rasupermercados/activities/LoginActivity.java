@@ -46,8 +46,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.negocio.Produto;
+import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -142,10 +145,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // App code
             }
         });
+
+        EnviarPlanilha();
     }
 
     private void EnviarPlanilha() {
-        File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/Teste.csv");
+        File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
 
         List<Produto> itens = new ArrayList<>();
         try
@@ -153,46 +158,54 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             FileInputStream fl = new FileInputStream(planilha);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fl));
 
-            int cont = 1;
+            int cont = 0;
             String line;
+            List<Produto> produtos = new ArrayList<>();
+            Produto produto = new Produto();
 
-            while ((line = reader.readLine()) != null)
-            {
-                if(!line.replace(";","").equals(""))
+            while (cont < 2) {
+                while ((line = reader.readLine()) != null)
                 {
-                    String[] dados = line.split(";");
-                    Log.i("Dados", "cont = " + cont +", dados = " +line);
-                    /*Componente item = new Componente();
-                    if(dados.length > 0)
-                        item.setSubConjunto(dados[0]);
-                    if(dados.length > 3)
-                        item.setNome(dados[3]);
-                    if(dados.length > 4)
-                        item.setDescricao(dados[4]);
-                    if(dados.length > 5)
-                        item.setAplicacao(dados[5]);
-                    if(dados.length > 6)
-                        item.setQuantidade(dados[6]);
+                    if(!line.replace(";","").equals(""))
+                    {
+                        String[] dados = line.split(";");
+                        if(dados.length > 1) {
+                            if(cont == 0 && !dados[0].equals("3/12/18")) {
+                                produto.setCodigo(Integer.parseInt(dados[0]));
+                                produto.setNome(dados[2]);
+                                produto.setUrlFotoStorage("Ketchup.jpeg");
 
-                    item.setCodigo(cont);
+                                produtos.add(produto);
+                            } else {
+                                if(dados[0].equals("3/12/18")) {
+                                    cont = 2;
+                                    break;
+                                }
+                            }
 
-                    itens.add(item);*/
+                            cont++;
 
-                    cont++;
+                            Log.i("Dados", "cont = " + cont +", dados = " +line);
+                        }
+
+                    } else {
+                        cont = 0;
+                        produto = new Produto();
+
+                    }
+
                 }
-
             }
 
-            /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference();
-            for(int j =1;j<31;j++)
+
+            for(int i =0; i < produtos.size();i++)
             {
-                for(int i =0; i < itens.size();i++)
-                {
-                    Componente item = itens.get(i);
-                    myRef.child("manutenção").child("componentes").child(Integer.toString(j * item.getCodigo())).setValue(item);
-                }
-            }*/
+                Produto item = produtos.get(i);
+                myRef.child("produtos").child(Integer.toString(item.getCodigo())).setValue(item);
+            }
 
             Toast.makeText(getApplicationContext(), "Planilha enviada", Toast.LENGTH_SHORT).show();
 
@@ -204,8 +217,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     private void VerificarPermissao() {
