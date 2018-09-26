@@ -1,5 +1,8 @@
 package com.rasupermercados.rasupermercados.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,7 +11,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Produto> prodrutos;
     private AdapterListaProdutos mAdapterProduto;
+    private SearchView searchView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,16 +56,31 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        handleIntent(getIntent());
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         RecyclerView rvProdutos = findViewById(R.id.rvProdutos);
 
-        prodrutos = new ArrayList<Produto>();
+        prodrutos = new ArrayList<>();
         mAdapterProduto = new AdapterListaProdutos(getApplicationContext(), prodrutos);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvProdutos.getContext(),
@@ -66,11 +89,8 @@ public class MainActivity extends AppCompatActivity {
         rvProdutos.setLayoutManager(layoutManager);
         rvProdutos.setAdapter(mAdapterProduto);
 
-
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refProdutos = database.getReference("produtos");
-
 
         ChildEventListener childProdutosListener = new ChildEventListener() {
             @Override
@@ -132,6 +152,21 @@ public class MainActivity extends AppCompatActivity {
         refProdutos.addChildEventListener(childProdutosListener);
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        return true;
     }
 
 }

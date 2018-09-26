@@ -51,6 +51,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
+import com.rasupermercados.rasupermercados.negocio.Supermercado;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -150,9 +151,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void EnviarPlanilha() {
-        File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
+        /*File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
 
-        List<Produto> itens = new ArrayList<>();
         try
         {
             FileInputStream fl = new FileInputStream(planilha);
@@ -216,7 +216,133 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }*/
+
+
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        Supermercado supermercado = new Supermercado();
+        supermercado.setCodigo(1);
+        supermercado.setNome("Supermercado Catenas");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(2);
+        supermercado.setNome("Carrefour");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(3);
+        supermercado.setNome("Super Zé");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(4);
+        supermercado.setNome("Supermercado Marcos");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(5);
+        supermercado.setNome("WallMart");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(6);
+        supermercado.setNome("Prátiko");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(7);
+        supermercado.setNome("Leve");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);
+
+        supermercado = new Supermercado();
+        supermercado.setCodigo(8);
+        supermercado.setNome("Supermercado Barros");
+        myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);*/
+
+
+        File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
+
+        try
+        {
+            FileInputStream fl = new FileInputStream(planilha);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fl));
+
+            int cont = 0;
+            String line;
+            List<ProdutoSupermercado> listaProdutoSupermercado = new ArrayList<>();
+            ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado();
+
+            while (cont < 2) {
+                while ((line = reader.readLine()) != null)
+                {
+                    if(!line.replace(";","").equals(""))
+                    {
+                        String[] dados = line.split(";");
+                        if(dados.length > 1) {
+
+                            if(cont == 0 && !dados[0].equals("3/12/18")) {
+                                produtoSupermercado = new ProdutoSupermercado();
+                                Produto produto = new Produto();
+                                produto.setCodigo(Integer.parseInt(dados[0]));
+                                produto.setNome(dados[2]);
+                                produto.setUrlFotoStorage("Ketchup.jpeg");
+
+                                produtoSupermercado.setProduto(produto);
+
+                                Supermercado supermercado = new Supermercado();
+                                supermercado.setCodigo(1);
+                                supermercado.setNome("Supermercado Catenas");
+
+                                produtoSupermercado.setSupermercado(supermercado);
+
+                            } else {
+                                if(dados[0].equals("3/12/18")) {
+                                    cont = 2;
+                                    break;
+                                }else {
+                                    produtoSupermercado.setValor(Double.parseDouble(dados[3].replace(".", "").replace(",", ".")));
+                                    listaProdutoSupermercado.add(produtoSupermercado);
+                                }
+                            }
+
+                            cont++;
+
+                            Log.i("Dados", "cont = " + cont +", dados = " +line);
+                        }
+
+                    } else {
+                        cont = 0;
+                        produtoSupermercado = new ProdutoSupermercado();
+
+                    }
+
+                }
+            }
+
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
+
+            for(int i =0; i < listaProdutoSupermercado.size();i++)
+            {
+                ProdutoSupermercado item = listaProdutoSupermercado.get(i);
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child(Integer.toString(item.getSupermercado().getCodigo())).setValue(item.getValor());
+            }
+
+            Toast.makeText(getApplicationContext(), "Planilha enviada", Toast.LENGTH_SHORT).show();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
     }
 
     private void VerificarPermissao() {
