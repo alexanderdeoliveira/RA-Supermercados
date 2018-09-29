@@ -263,7 +263,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         myRef.child("supermercados").child(Integer.toString(supermercado.getCodigo())).setValue(supermercado);*/
 
 
-        File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
+        /*File planilha = new File(Environment.getExternalStorageDirectory(), "Documents/RelatorioProdutos.csv");
 
         try
         {
@@ -354,7 +354,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        }*/
 
     }
 

@@ -121,8 +121,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                         produtoSupermercado.setSupermercado(supermercado);
                         produtoSupermercado.setProduto(produto);
 
-                        listaProdutosSupermercado.add(produtoSupermercado);
-                        mAdapter.notifyItemInserted(listaProdutosSupermercado.size()-1);
+                        mAdapter.addItem(produtoSupermercado);
                     }
 
                     @Override

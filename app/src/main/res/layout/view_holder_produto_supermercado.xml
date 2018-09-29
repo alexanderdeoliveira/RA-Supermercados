@@ -11,12 +11,14 @@
         android:id="@+id/tv_nome_supermercado"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:gravity="left"
         android:layout_margin="8dp"
-        android:textSize="16sp"
-        android:text="Supermercado Catenas"/>
+        android:layout_weight="2"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:text="Supermercado Catenas"
+        android:textColor="@color/color_nome_supermercado"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tv_valor_produto"
@@ -26,8 +28,8 @@
         android:layout_gravity="center_vertical"
         android:gravity="right"
         android:layout_margin="8dp"
-        android:textSize="16sp"
-        android:textColor="@color/color_texto_valor"
+        android:textSize="18sp"
+        android:textColor="@color/color_valor"
         android:text="R$ 9,99"/>
 
 

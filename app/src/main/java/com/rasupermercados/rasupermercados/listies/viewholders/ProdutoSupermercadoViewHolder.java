@@ -17,6 +17,8 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
 
+import java.text.DecimalFormat;
+
 public class ProdutoSupermercadoViewHolder extends RecyclerView.ViewHolder{
 
     private TextView tvValorProduto;
@@ -33,7 +35,9 @@ public class ProdutoSupermercadoViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setItem(ProdutoSupermercado item) {
-        tvValorProduto.setText("R$ " + Double.toString(item.getValor()).replace(".", ","));
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        tvValorProduto.setText("R$ " + df.format(item.getValor()));
         tvNomeSupermercado.setText(item.getSupermercado().getNome());
     }
 }

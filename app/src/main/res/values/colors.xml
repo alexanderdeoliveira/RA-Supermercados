@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="background_color_branco">#FFFFFFFF</color>
-    <color name="color_texto_valor">#FF228CDB</color>
+    <color name="color_valor">#FF228CDB</color>
+    <color name="color_nome_supermercado">#FF000000</color>
+    <color name="color_nome_produto">#FF000000</color>
 </resources>

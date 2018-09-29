@@ -43,6 +43,11 @@ public class AdapterListaProdutosSupermercado extends RecyclerView.Adapter<Produ
         holder.setItem(itens.get(position));
     }
 
+    public void addItem(ProdutoSupermercado item) {
+        itens.add(item);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return itens.size();

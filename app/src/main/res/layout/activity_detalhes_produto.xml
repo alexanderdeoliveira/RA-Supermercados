@@ -37,6 +37,7 @@
                 android:layout_gravity="center"
                 android:text="Nome produto"
                 android:textSize="20sp"
+                android:textColor="@color/color_nome_produto"
                 android:textStyle="bold"/>
 
         </LinearLayout>

@@ -1,5 +1,7 @@
 package com.rasupermercados.rasupermercados.negocio;
 
+import android.support.annotation.NonNull;
+
 public class ProdutoSupermercado {
     Produto produto;
     Supermercado supermercado;
