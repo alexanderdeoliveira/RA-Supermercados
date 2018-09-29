@@ -1,6 +1,7 @@
 package com.rasupermercados.rasupermercados.listies.viewholders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.activities.DetalhesProdutoActivity;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 
 import java.io.File;
@@ -34,7 +36,7 @@ public class ProdutoViewHolder extends RecyclerView.ViewHolder{
 
     }
 
-    public void setProduto(Produto produto, StorageReference mStorageProdutos) {
+    public void setProduto(final Produto produto, StorageReference mStorageProdutos) {
 
         StorageReference produtoRef = mStorageProdutos.child(produto.getUrlFotoStorage());
         tvNomeProduto.setText(produto.getNome());
@@ -52,6 +54,16 @@ public class ProdutoViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
+            }
+        });
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(contexto, DetalhesProdutoActivity.class);
+                intent.putExtra("codigoProduto", produto.getCodigo());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                contexto.startActivity(intent);
             }
         });
 

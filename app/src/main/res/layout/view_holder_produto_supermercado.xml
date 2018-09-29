@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cardview_light_background"
+    android:orientation="horizontal"
+    android:layout_margin="4dp">
+
+    <TextView
+        android:id="@+id/tv_nome_supermercado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:gravity="left"
+        android:layout_margin="8dp"
+        android:textSize="16sp"
+        android:text="Supermercado Catenas"/>
+
+    <TextView
+        android:id="@+id/tv_valor_produto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:gravity="right"
+        android:layout_margin="8dp"
+        android:textSize="16sp"
+        android:textColor="@color/color_texto_valor"
+        android:text="R$ 9,99"/>
+
+
+
+</LinearLayout>

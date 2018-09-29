@@ -329,7 +329,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             for(int i =0; i < listaProdutoSupermercado.size();i++)
             {
                 ProdutoSupermercado item = listaProdutoSupermercado.get(i);
-                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child(Integer.toString(item.getSupermercado().getCodigo())).setValue(item.getValor());
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("2").setValue(item.getValor()+0.15);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("3").setValue(item.getValor()+0.3);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("4").setValue(item.getValor()+0.45);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("5").setValue(item.getValor()+1);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("6").setValue(item.getValor()+1.15);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("7").setValue(item.getValor()+1.15);
+
+                myRef.child("produto_supermercado").child(Integer.toString(item.getProduto().getCodigo())).child("8").setValue(item.getValor()+1.25);
+
             }
 
             Toast.makeText(getApplicationContext(), "Planilha enviada", Toast.LENGTH_SHORT).show();
