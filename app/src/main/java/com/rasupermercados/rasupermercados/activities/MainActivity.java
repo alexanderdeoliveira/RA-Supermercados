@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -82,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
         prodrutos = new ArrayList<>();
         mAdapterProduto = new AdapterListaProdutos(getApplicationContext(), prodrutos);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+       /* LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvProdutos.getContext(),
                 layoutManager.getOrientation());
-        rvProdutos.addItemDecoration(dividerItemDecoration);
-        rvProdutos.setLayoutManager(layoutManager);
+        rvProdutos.addItemDecoration(dividerItemDecoration);*/
+        rvProdutos.setLayoutManager(new GridLayoutManager(this, 2));
         rvProdutos.setAdapter(mAdapterProduto);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
