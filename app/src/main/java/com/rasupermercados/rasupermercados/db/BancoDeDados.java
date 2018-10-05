@@ -24,7 +24,7 @@ public class BancoDeDados extends SQLiteOpenHelper {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE USUARIO(" +
                     "  USNOMEUSUARIO    INTEGER" +
-                    ", USSENHA    TEXT     " +
+                    ", USURLFOTO    TEXT     " +
                     ", USEMAIL  TEXT     " +
                     ")");
 
@@ -35,11 +35,13 @@ public class BancoDeDados extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE PRODUTO(" +
                     "  PRCODPRODUTO    INTEGER" +
                     ", PRNOMEPRODUTO    TEXT     " +
+                    ", PRURLFOTOPRODUTO    TEXT     " +
                     ")");
 
             db.execSQL("CREATE TABLE CATEGORIA(" +
                     "  CACODCOTEGORIA    INTEGER" +
                     ", CANOMECATEGORIA    TEXT     " +
+                    ", CAURLIMAGEMCATEGORIA    TEXT     " +
                     ")");
 
             db.execSQL("CREATE TABLE PRODUTOSUPERMERCADO(" +

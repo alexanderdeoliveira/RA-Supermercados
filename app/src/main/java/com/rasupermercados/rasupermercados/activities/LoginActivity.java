@@ -40,6 +40,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,7 +50,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.db.UsuarioDB;
+import com.rasupermercados.rasupermercados.negocio.Categoria;
+import com.rasupermercados.rasupermercados.negocio.Usuario;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,59 +95,77 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
 
         mAuth = FirebaseAuth.getInstance();
+        if(buscarUsuarioLogado() == null) {
+            setContentView(R.layout.activity_login);
+            // Set up the login form.
+            mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+            populateAutoComplete();
 
-        callbackManager = CallbackManager.Factory.create();
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
 
-            @Override
-            public void onCancel() {
-                // App code
-            }
+            callbackManager = CallbackManager.Factory.create();
 
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
+            LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.setReadPermissions("email", "public_profile");
 
-        EnviarPlanilha();
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    handleFacebookAccessToken(loginResult.getAccessToken());
+                }
+
+                @Override
+                public void onCancel() {
+                    // App code
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                }
+            });
+        } else {
+            startActivity(new Intent(getApplicationContext(), Main2Activity.class));
+        }
+
+
+        //EnviarPlanilha();
+    }
+
+    private Usuario buscarUsuarioLogado() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        UsuarioDB usuarioDB = UsuarioDB.getInstancia(getApplicationContext());
+        if(currentUser != null) {
+            Usuario usuario = new Usuario(currentUser);
+            usuarioDB.atualizarUsuario(usuario);
+
+            return usuario;
+
+        } else
+            return usuarioDB.buscarUsuario();
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -148,12 +175,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            Usuario usuario = new Usuario(user);
+                            UsuarioDB.getInstancia(getApplicationContext()).salvarUsuario(usuario);
+                            //buscarFotoUsuario(usuario);
+                            startActivity(new Intent(getApplicationContext(), Main2Activity.class));
                         } else {
-                            // If sign in fails, display a message to the user.
-                            //updateUI(null);
+                            Toast.makeText(getApplicationContext(),"Não foi possível fazer login", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -366,6 +394,47 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Toast.makeText(getApplicationContext(), "Planilha não enviada. Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }*/
 
+    }
+
+    private void enviarCategorias() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        Categoria categoria = new Categoria();
+        categoria.setCodigoCategoria(1);
+        categoria.setNome("Açougue");
+        categoria.setUrlFotoCategoria("Acougue.jpg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+
+        categoria = new Categoria();
+        categoria.setCodigoCategoria(2);
+        categoria.setNome("Bebidas Alcóolicas");
+        categoria.setUrlFotoCategoria("BebidasAlcoolicas.jpg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+
+        categoria = new Categoria();
+        categoria.setCodigoCategoria(3);
+        categoria.setNome("Bebidas Não Alcóolicas");
+        categoria.setUrlFotoCategoria("BebidasNaoAlcoolicas.jpeg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+
+        categoria = new Categoria();
+        categoria.setCodigoCategoria(4);
+        categoria.setNome("Limpeza");
+        categoria.setUrlFotoCategoria("Limpeza.jpg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+
+        categoria = new Categoria();
+        categoria.setCodigoCategoria(5);
+        categoria.setNome("Cuidado Pessoal");
+        categoria.setUrlFotoCategoria("CuidadoPessoal.jpg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+
+        categoria = new Categoria();
+        categoria.setCodigoCategoria(6);
+        categoria.setNome("Frios");
+        categoria.setUrlFotoCategoria("Frios.jpg");
+        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
     }
 
     private void VerificarPermissao() {

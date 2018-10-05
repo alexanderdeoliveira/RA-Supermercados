@@ -3,7 +3,7 @@ package com.rasupermercados.rasupermercados.negocio;
 public class Produto {
     int codigo;
     String nome;
-    //ProdutoCategoria categoria;
+    Categoria categoria;
     String urlFotoStorage;
 
     public void setCodigo(int codigo) {
@@ -22,13 +22,13 @@ public class Produto {
         this.nome = nome;
     }
 
-    /*public ProdutoCategoria getCategoria() {
-        return categoria;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
-    public void setCategoria(ProdutoCategoria categoria) {
-        this.categoria = categoria;
-    }*/
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
     public String getUrlFotoStorage() {
         return urlFotoStorage;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/cardview_light_background"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:id="@+id/iv_imagem_categoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.3"/>
+
+    <TextView
+        android:id="@+id/tv_nome_categoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="MASSAS"
+        android:textSize="25dp"
+        android:textStyle="bold"/>
+
+</RelativeLayout>

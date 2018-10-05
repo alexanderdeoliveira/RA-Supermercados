@@ -7,17 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -25,8 +21,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 
@@ -35,7 +31,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Produto> prodrutos;
+    private List<Produto> produtos;
     private AdapterListaProdutos mAdapterProduto;
     private SearchView searchView;
 
@@ -62,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+
+            List<Produto> produtos = ProdutoDB.getInstancia(getApplicationContext()).buscarProduto(query);
+            int i = 0;
 
         }
     }
@@ -81,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView rvProdutos = findViewById(R.id.rvProdutos);
 
-        prodrutos = new ArrayList<>();
-        mAdapterProduto = new AdapterListaProdutos(getApplicationContext(), prodrutos);
+        produtos = new ArrayList<>();
+        mAdapterProduto = new AdapterListaProdutos(getApplicationContext(), produtos);
        /* LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvProdutos.getContext(),
                 layoutManager.getOrientation());
@@ -98,8 +96,11 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d("RA SUPERMERCADOS", "onChildAdded:" + dataSnapshot.getKey());
 
-                Produto prodruto = dataSnapshot.getValue(Produto.class);
-                prodrutos.add(prodruto);
+                Produto produto = dataSnapshot.getValue(Produto.class);
+                produtos.add(produto);
+
+                ProdutoDB produtoDB = ProdutoDB.getInstancia(getApplicationContext());
+                produtoDB.salvarProduto(produto);
 
                 mAdapterProduto.notifyItemInserted(Integer.parseInt(dataSnapshot.getKey()));
 
@@ -107,12 +108,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d("RA SUPERMERCADOS", "onChildChanged:" + dataSnapshot.getKey());
-
                 Produto prodrutoAlterado = dataSnapshot.getValue(Produto.class);
-                prodrutos.get(Integer.parseInt(dataSnapshot.getKey())).setNome(prodrutoAlterado.getNome());
-                prodrutos.get(Integer.parseInt(dataSnapshot.getKey())).setCodigo(prodrutoAlterado.getCodigo());
-                prodrutos.get(Integer.parseInt(dataSnapshot.getKey())).setUrlFotoStorage(prodrutoAlterado.getUrlFotoStorage());
+                produtos.get(Integer.parseInt(dataSnapshot.getKey())).setNome(prodrutoAlterado.getNome());
+                produtos.get(Integer.parseInt(dataSnapshot.getKey())).setCodigo(prodrutoAlterado.getCodigo());
+                produtos.get(Integer.parseInt(dataSnapshot.getKey())).setUrlFotoStorage(prodrutoAlterado.getUrlFotoStorage());
 
                 mAdapterProduto.notifyItemChanged(Integer.parseInt(dataSnapshot.getKey()));
 
@@ -120,12 +119,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d("RA SUPERMERCADOS", "onChildRemoved:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so remove it.
                 Produto produto = dataSnapshot.getValue(Produto.class);
-                prodrutos.remove(produto);
+                produtos.remove(produto);
+
+                ProdutoDB produtoDB = ProdutoDB.getInstancia(getApplicationContext());
+                produtoDB.deletarProduto(produto.getCodigo());
 
                 mAdapterProduto.notifyItemRemoved(Integer.parseInt(dataSnapshot.getKey()));
             }
@@ -134,12 +132,9 @@ public class MainActivity extends AppCompatActivity {
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d("RA SUPERMERCADOS", "onChildMoved:" + dataSnapshot.getKey());
 
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
                 Produto movedComment = dataSnapshot.getValue(Produto.class);
                 String commentKey = dataSnapshot.getKey();
 
-                // ...
             }
 
             @Override

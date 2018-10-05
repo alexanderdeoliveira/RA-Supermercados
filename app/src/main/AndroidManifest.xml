@@ -55,7 +55,11 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".activities.DetalhesProdutoActivity"></activity>
+        <activity android:name=".activities.DetalhesProdutoActivity" />
+        <activity
+            android:name=".activities.Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
