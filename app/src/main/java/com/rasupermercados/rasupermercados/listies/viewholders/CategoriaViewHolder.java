@@ -2,10 +2,6 @@ package com.rasupermercados.rasupermercados.listies.viewholders;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,13 +9,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
-import com.rasupermercados.rasupermercados.activities.DetalhesProdutoActivity;
+import com.rasupermercados.rasupermercados.activities.ProdutosActivity;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
-import com.rasupermercados.rasupermercados.negocio.Produto;
 
 public class CategoriaViewHolder extends RecyclerView.ViewHolder{
 
@@ -64,10 +57,10 @@ public class CategoriaViewHolder extends RecyclerView.ViewHolder{
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(contexto, DetalhesProdutoActivity.class);
-                intent.putExtra("codigoProduto", produto.getCodigo());
+                Intent intent = new Intent(contexto, ProdutosActivity.class);
+                intent.putExtra("codigoCategoria", categoria.getCodigoCategoria());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                contexto.startActivity(intent);*/
+                contexto.startActivity(intent);
             }
         });
 

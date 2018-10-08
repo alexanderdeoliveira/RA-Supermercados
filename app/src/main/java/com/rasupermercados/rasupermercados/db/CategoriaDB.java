@@ -61,6 +61,16 @@ public class CategoriaDB {
         return categorias;
     }
 
+    public int atualizarCategoria(Categoria categoria) {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("CANOMECATEGORIA", categoria.getNome());
+        values.put("CAURLIMAGEMCATEGORIA", categoria.getUrlFotoCategoria());
+
+        return db.update("CATEGORIA", values, "CACODCOTEGORIA = " + categoria.getCodigoCategoria(), null);
+    }
+
     public void salvarCategoria(Categoria categoria) {
         SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
 

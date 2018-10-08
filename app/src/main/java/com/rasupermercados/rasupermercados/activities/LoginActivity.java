@@ -38,9 +38,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,8 +53,6 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
         } else {
-            startActivity(new Intent(getApplicationContext(), Main2Activity.class));
+            startActivity(new Intent(getApplicationContext(), CategoriasActivity.class));
         }
 
 
@@ -179,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Usuario usuario = new Usuario(user);
                             UsuarioDB.getInstancia(getApplicationContext()).salvarUsuario(usuario);
                             //buscarFotoUsuario(usuario);
-                            startActivity(new Intent(getApplicationContext(), Main2Activity.class));
+                            startActivity(new Intent(getApplicationContext(), CategoriasActivity.class));
                         } else {
                             Toast.makeText(getApplicationContext(),"Não foi possível fazer login", Toast.LENGTH_SHORT).show();
                         }

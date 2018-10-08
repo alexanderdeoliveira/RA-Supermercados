@@ -52,13 +52,14 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main" />
         <activity android:name=".activities.DetalhesProdutoActivity" />
         <activity
-            android:name=".activities.Main2Activity"
+            android:name=".activities.CategoriasActivity"
             android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ProdutosActivity"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

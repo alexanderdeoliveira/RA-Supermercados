@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.Main2Activity"
-    tools:showIn="@layout/app_bar_main2">
+    tools:context=".activities.ProdutosActivity"
+    tools:showIn="@layout/app_bar_produtos">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_categorias"
+        android:id="@+id/rv_produtos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
