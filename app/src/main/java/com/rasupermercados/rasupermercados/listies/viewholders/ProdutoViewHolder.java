@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -37,25 +39,13 @@ public class ProdutoViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setProduto(final Produto produto, StorageReference mStorageProdutos) {
-
         StorageReference produtoRef = mStorageProdutos.child(produto.getUrlFotoStorage());
         tvNomeProduto.setText(produto.getNome());
 
-        final long ONE_MEGABYTE = 1024 * 1024;
-        produtoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Drawable imagemProduto = new BitmapDrawable(contexto.getResources(), BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-
-                ivProduto.setImageDrawable(imagemProduto);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        Glide.with(contexto)
+                .using(new FirebaseImageLoader())
+                .load(produtoRef)
+                .into(ivProduto);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

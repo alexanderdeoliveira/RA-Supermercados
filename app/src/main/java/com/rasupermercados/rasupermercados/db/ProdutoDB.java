@@ -32,12 +32,39 @@ public class ProdutoDB {
 
         SQLiteDatabase dataBase = db.getWritableDatabase();
 
-        Produto produto = new Produto();
+        String[] projection = {
+                "PRCODPRODUTO",
+                "PRNOMEPRODUTO",
+                "PRURLFOTOPRODUTO"
+        };
+
+        String selection =  "PRCODPRODUTO = " + codProduto;
+
+        Cursor cursor = dataBase.query(
+                "PRODUTO",
+                projection,
+                selection,
+                null,
+                null,
+                null,
+                null
+        );
+
+        Produto produto = null;
+
+        if (cursor.moveToFirst()) {
+            produto = new Produto();
+            produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
+            produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
+            produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+
+            cursor.close();
+        }
 
         return produto;
     }
 
-    public List<Produto> buscarProduto(String query) {
+    public List<Produto> buscarProdutos(String query) {
         BancoDeDados db = BancoDeDados.getInstance(contexto);
         SQLiteDatabase dataBase = db.getReadableDatabase();
 
@@ -71,6 +98,45 @@ public class ProdutoDB {
             produtos.add(produto);
         }
 
+        cursor.close();
+
+        return produtos;
+    }
+
+    public List<Produto> buscarProdutos() {
+        BancoDeDados db = BancoDeDados.getInstance(contexto);
+        SQLiteDatabase dataBase = db.getReadableDatabase();
+
+
+        String[] projection = {
+                "PRCODPRODUTO",
+                "PRNOMEPRODUTO",
+                "PRURLFOTOPRODUTO"
+        };
+
+
+        Cursor cursor = dataBase.query(
+                "PRODUTO",
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        List<Produto> produtos = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Produto produto = new Produto();
+            produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
+            produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
+            produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+
+            produtos.add(produto);
+        }
+
+        cursor.close();
+
         return produtos;
     }
 
@@ -84,6 +150,18 @@ public class ProdutoDB {
 
         db.insert("PRODUTO", null, values);
     }
+
+    public int atualizarProduto(Produto produto) {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("PRCODPRODUTO", produto.getCodigo());
+        values.put("PRNOMEPRODUTO", produto.getNome());
+        values.put("PRURLFOTOPRODUTO", produto.getUrlFotoStorage());
+
+        return db.update("PRODUTO", values, "PRCODPRODUTO = " + produto.getCodigo(), null);
+    }
+
 
     public void deletarProduto(int codProduto) {
         SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();

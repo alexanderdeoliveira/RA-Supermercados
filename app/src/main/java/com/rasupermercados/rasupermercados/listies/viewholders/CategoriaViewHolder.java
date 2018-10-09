@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
-import com.rasupermercados.rasupermercados.activities.ProdutosActivity;
+import com.rasupermercados.rasupermercados.activities.MainActivity;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 
 public class CategoriaViewHolder extends RecyclerView.ViewHolder{
@@ -57,7 +57,7 @@ public class CategoriaViewHolder extends RecyclerView.ViewHolder{
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(contexto, ProdutosActivity.class);
+                Intent intent = new Intent(contexto, MainActivity.class);
                 intent.putExtra("codigoCategoria", categoria.getCodigoCategoria());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 contexto.startActivity(intent);

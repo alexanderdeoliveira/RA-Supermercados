@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
         } else {
-            startActivity(new Intent(getApplicationContext(), CategoriasActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
 
@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Usuario usuario = new Usuario(user);
                             UsuarioDB.getInstancia(getApplicationContext()).salvarUsuario(usuario);
                             //buscarFotoUsuario(usuario);
-                            startActivity(new Intent(getApplicationContext(), CategoriasActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
                             Toast.makeText(getApplicationContext(),"Não foi possível fazer login", Toast.LENGTH_SHORT).show();
                         }

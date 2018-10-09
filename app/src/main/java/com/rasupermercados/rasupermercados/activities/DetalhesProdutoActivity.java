@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercado;
 import com.rasupermercados.rasupermercados.negocio.Produto;
@@ -35,7 +38,7 @@ import com.rasupermercados.rasupermercados.negocio.Supermercado;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetalhesProdutoActivity extends AppCompatActivity {
+public class DetalhesProdutoActivity extends AppCompatActivity implements ChildEventListener {
 
     private RecyclerView rvProdutosSupermercado;
     private List<ProdutoSupermercado> listaProdutosSupermercado = new ArrayList<>();
@@ -56,7 +59,15 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         tvNomeProduto = findViewById(R.id.tv_nome_produto);
         contexto = this;
 
+        StorageReference mStorageProdutos = FirebaseStorage.getInstance().getReference().child("produtos");
+
         int codigoProduto = getIntent().getIntExtra("codigoProduto", 0);
+        produto = ProdutoDB.getInstancia(getApplicationContext()).buscarProduto(codigoProduto);
+        tvNomeProduto.setText(produto.getNome());
+        Glide.with(contexto)
+                .using(new FirebaseImageLoader())
+                .load(mStorageProdutos.child(produto.getUrlFotoStorage()))
+                .into(ivImagemProduto);
 
         mAdapter = new AdapterListaProdutosSupermercado(getApplicationContext(), listaProdutosSupermercado);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
@@ -67,103 +78,58 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         rvProdutosSupermercado.setAdapter(mAdapter);
 
         database = FirebaseDatabase.getInstance();
-        DatabaseReference produtoDataBaseRef = database.getReference("produtos").child(Integer.toString(codigoProduto));
-
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Produto produto = dataSnapshot.getValue(Produto.class);
-                tvNomeProduto.setText(produto.getNome());
-
-                StorageReference produtoStorageRef = FirebaseStorage.getInstance().getReference().child("produtos").child(produto.getUrlFotoStorage());
-
-                final long ONE_MEGABYTE = 1024 * 1024;
-                produtoStorageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Drawable imagemProduto = new BitmapDrawable(contexto.getResources(), BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-
-                        ivImagemProduto.setImageDrawable(imagemProduto);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-
-        produtoDataBaseRef.addListenerForSingleValueEvent(postListener);
-
 
         DatabaseReference refProdutos = database.getReference("produto_supermercado").child(Integer.toString(codigoProduto));
 
-        ChildEventListener childProdutosListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d("RA SUPERMERCADOS", "add:" + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
-                DatabaseReference refSupermercados = database.getReference("supermercados").child(dataSnapshot.getKey());
-
-                final double valorProduto = Double.parseDouble(dataSnapshot.getValue().toString());
-                ValueEventListener supermercadosListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Supermercado supermercado = dataSnapshot.getValue(Supermercado.class);
-
-                        ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado();
-                        produtoSupermercado.setValor(valorProduto);
-                        produtoSupermercado.setSupermercado(supermercado);
-                        produtoSupermercado.setProduto(produto);
-
-                        mAdapter.addItem(produtoSupermercado);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                };
-
-                refSupermercados.addListenerForSingleValueEvent(supermercadosListener);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d("RA SUPERMERCADOS", "onChildChanged:" + dataSnapshot.getKey());
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d("RA SUPERMERCADOS", "onChildRemoved:" + dataSnapshot.getKey());
-
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d("RA SUPERMERCADOS", "onChildMoved:" + dataSnapshot.getKey());
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RA SUPERMERCADOS", "postComments:onCancelled", databaseError.toException());
-                Toast.makeText(getApplicationContext(), "Failed to load comments.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        refProdutos.addChildEventListener(childProdutosListener);
-
+        refProdutos.addChildEventListener(this);
 
     }
 
 
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        DatabaseReference refSupermercados = database.getReference("supermercados").child(dataSnapshot.getKey());
+
+        final double valorProduto = Double.parseDouble(dataSnapshot.getValue().toString());
+        ValueEventListener supermercadosListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Supermercado supermercado = dataSnapshot.getValue(Supermercado.class);
+
+                ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado();
+                produtoSupermercado.setValor(valorProduto);
+                produtoSupermercado.setSupermercado(supermercado);
+                produtoSupermercado.setProduto(produto);
+
+                mAdapter.addItem(produtoSupermercado);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+
+        refSupermercados.addListenerForSingleValueEvent(supermercadosListener);
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        String i = "";
+
+    }
 }
