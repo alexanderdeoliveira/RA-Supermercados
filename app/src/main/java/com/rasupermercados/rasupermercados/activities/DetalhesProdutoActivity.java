@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_produto);
 
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
         rvProdutosSupermercado = findViewById(R.id.rv_produto_supermercados);
         ivImagemProduto = findViewById(R.id.iv_produto);
         tvNomeProduto = findViewById(R.id.tv_nome_produto);
@@ -83,6 +86,16 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
 
         refProdutos.addChildEventListener(this);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

@@ -88,4 +88,10 @@ public class UsuarioDB {
 
         db.insert("USUARIO", null, values);
     }
+
+    public void deletarUsuario() {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        db.delete("USUARIO", null, null);
+    }
 }

@@ -10,40 +10,37 @@ import android.view.ViewGroup;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.listies.viewholders.ProdutoPromocaoViewHolder;
 import com.rasupermercados.rasupermercados.listies.viewholders.ProdutoViewHolder;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 
 import java.util.List;
 
-public class AdapterListaProdutos extends RecyclerView.Adapter<ProdutoViewHolder> {
+public class AdapterListaProdutosPromocao extends RecyclerView.Adapter<ProdutoPromocaoViewHolder> {
     private List<Produto> produtos;
     private Context contexto;
     private StorageReference mStorageProdutos;
 
-    public AdapterListaProdutos(Context contexto, List<Produto> produtos) {
+    public AdapterListaProdutosPromocao(Context contexto, List<Produto> produtos) {
         this.produtos = produtos;
         this.contexto = contexto;
         mStorageProdutos = FirebaseStorage.getInstance().getReference().child("produtos");
 
     }
 
-    public void atualizarListaProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
-        notifyDataSetChanged();
-    }
     @NonNull
     @Override
-    public ProdutoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProdutoPromocaoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_holder_produto, parent, false);
+                .inflate(R.layout.view_holder_produto_promocao, parent, false);
 
-        ProdutoViewHolder produtoViewHolder = new ProdutoViewHolder(contexto, view);
+        ProdutoPromocaoViewHolder produtoViewHolder = new ProdutoPromocaoViewHolder(contexto, view);
 
         return produtoViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProdutoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProdutoPromocaoViewHolder holder, int position) {
         holder.setProduto(produtos.get(position), mStorageProdutos);
     }
 

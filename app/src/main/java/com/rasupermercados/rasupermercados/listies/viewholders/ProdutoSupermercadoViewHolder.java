@@ -35,7 +35,7 @@ public class ProdutoSupermercadoViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setItem(ProdutoSupermercado item) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#0.00");
 
         tvValorProduto.setText("R$ " + df.format(item.getValor()));
         tvNomeSupermercado.setText(item.getSupermercado().getNome());
