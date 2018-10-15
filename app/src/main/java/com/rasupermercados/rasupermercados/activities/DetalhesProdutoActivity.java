@@ -5,16 +5,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +35,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
+import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaLogoSupermercado;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
+import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercado;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
+import com.rasupermercados.rasupermercados.utils.CustomBottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +57,9 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
     private Context contexto;
     private FirebaseDatabase database;
     private Produto produto;
+    private CustomBottomSheetBehavior bottomSheetBehavior;
+    private ImageView ivCarrinho;
+    private RecyclerView rvLogoSupermercados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,34 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
         rvProdutosSupermercado = findViewById(R.id.rv_produto_supermercados);
         ivImagemProduto = findViewById(R.id.iv_produto);
         tvNomeProduto = findViewById(R.id.tv_nome_produto);
+        ivCarrinho = findViewById(R.id.iv_carrinho);
+
+        final LinearLayout bottomSheetLayout = findViewById(R.id.layout_bottom_sheet);
+
+        rvLogoSupermercados = findViewById(R.id.rv_logos_supermercados);
+        /*mAdapterProdutPromocao = new AdapterListaLogoSupermercado(getApplicationContext(), produtosPromocao);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvPromocoes.setLayoutManager(layoutManager);
+        rvPromocoes.setAdapter(mAdapterProdutPromocao);*/
+
+        bottomSheetBehavior = CustomBottomSheetBehavior.from(bottomSheetLayout);
+
+        bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setHideable(true);
+
+        ivCarrinho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomSheetBehavior.getState() == CustomBottomSheetBehavior.STATE_COLLAPSED || bottomSheetBehavior.getState() == CustomBottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_HIDDEN);
+                }
+                else {
+                    bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
 
         contexto = this;
 

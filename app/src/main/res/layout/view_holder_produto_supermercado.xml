@@ -20,6 +20,18 @@
         android:textColor="@color/color_nome_supermercado"
         android:textSize="18sp" />
 
+    <ImageView
+        android:id="@+id/bt_adicionar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:src="@drawable/ic_carrinho"
+        android:tint="@color/color_light_gray"
+        android:layout_margin="8dp"
+        android:text="R$ 9,99"/>
+
     <TextView
         android:id="@+id/tv_valor_produto"
         android:layout_width="0dp"

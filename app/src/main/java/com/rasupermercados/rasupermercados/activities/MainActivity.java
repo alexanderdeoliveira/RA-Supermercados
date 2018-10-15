@@ -117,11 +117,8 @@ public class MainActivity extends AppCompatActivity
         rvPromocoes.setLayoutManager(layoutManager);
         rvPromocoes.setAdapter(mAdapterProdutPromocao);
 
-
         layoutCarregando.setVisibility(View.GONE);
         rvProdutos.setVisibility(View.VISIBLE);
-
-
 
         //refProdutos.addChildEventListener(this);
 
