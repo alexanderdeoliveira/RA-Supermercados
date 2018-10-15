@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,13 +55,14 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhes_produto);
+        setContentView(R.layout.activity_detalhes_produto_2);
 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         rvProdutosSupermercado = findViewById(R.id.rv_produto_supermercados);
         ivImagemProduto = findViewById(R.id.iv_produto);
         tvNomeProduto = findViewById(R.id.tv_nome_produto);
+
         contexto = this;
 
         StorageReference mStorageProdutos = FirebaseStorage.getInstance().getReference().child("produtos");

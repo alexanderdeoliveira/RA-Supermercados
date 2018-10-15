@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, ChildEventListener {
 
     private List<Produto> produtos;
     private AdapterListaProdutos mAdapterProduto;
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
-    /*@Override
+    @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
         Produto produto = dataSnapshot.getValue(Produto.class);
         ProdutoDB produtoDB = ProdutoDB.getInstancia(getApplicationContext());
@@ -260,5 +260,5 @@ public class MainActivity extends AppCompatActivity
         Log.w("RA SUPERMERCADOS", "postComments:onCancelled", databaseError.toException());
         Toast.makeText(getApplicationContext(), "Failed to load comments.",
                 Toast.LENGTH_SHORT).show();
-    }*/
+    }
 }
