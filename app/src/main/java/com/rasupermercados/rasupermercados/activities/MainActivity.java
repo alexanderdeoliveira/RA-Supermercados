@@ -39,6 +39,7 @@ import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.fragments.CategoriasFiltroFragment;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
+import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, ChildEventListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, ChildEventListener, CategoriasFiltroFragment.onAplicarFiltrosListener {
 
     private List<Produto> produtos;
     private AdapterListaProdutos mAdapterProduto;
@@ -257,5 +258,12 @@ public class MainActivity extends AppCompatActivity
         Log.w("RA SUPERMERCADOS", "postComments:onCancelled", databaseError.toException());
         Toast.makeText(getApplicationContext(), "Failed to load comments.",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAplicarFiltros(List<Categoria> filtros) {
+        layoutPromocoes.setVisibility(View.GONE);
+        produtos = ProdutoDB.getInstancia(getApplicationContext()).buscarProdutosPorCategoria(filtros);
+        mAdapterProduto.atualizarListaProdutos(produtos);
     }
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -38,6 +39,10 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,7 +57,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
+import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
+import com.rasupermercados.rasupermercados.utils.Constantes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
+    private ProgressDialog dialogLogin;
 
 
     @Override
@@ -129,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
+                    dialogLogin = ProgressDialog.show(getApplicationContext(), "", "Aguarde login...");
                     handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
@@ -143,11 +152,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
         } else {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivityForResult(new Intent(getApplicationContext(), MainActivity.class), Constantes.REQUEST_MAIN);
         }
 
-
+        //enviarProdutos();
         //EnviarPlanilha();
+    }
+
+    public void disconnectFromFacebook() {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
     }
 
     private Usuario buscarUsuarioLogado() {
@@ -173,7 +198,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             FirebaseUser user = mAuth.getCurrentUser();
                             Usuario usuario = new Usuario(user);
                             UsuarioDB.getInstancia(getApplicationContext()).salvarUsuario(usuario);
-                            //buscarFotoUsuario(usuario);
+                            dialogLogin.dismiss();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
                             Toast.makeText(getApplicationContext(),"Não foi possível fazer login", Toast.LENGTH_SHORT).show();
@@ -391,7 +416,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void enviarCategorias() {
+    private void enviarProdutos() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
@@ -399,37 +424,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         categoria.setCodigoCategoria(1);
         categoria.setNome("Açougue");
         categoria.setUrlFotoCategoria("Acougue.jpg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
 
-        categoria = new Categoria();
-        categoria.setCodigoCategoria(2);
-        categoria.setNome("Bebidas Alcóolicas");
-        categoria.setUrlFotoCategoria("BebidasAlcoolicas.jpg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+        Produto produto = new Produto();
+        produto.setCategoria(categoria);
+        produto.setCodigo(1);
+        produto.setNome("Picanha");
+        produto.setUrlFotoStorage("Picanha.jpg");
 
-        categoria = new Categoria();
-        categoria.setCodigoCategoria(3);
-        categoria.setNome("Bebidas Não Alcóolicas");
-        categoria.setUrlFotoCategoria("BebidasNaoAlcoolicas.jpeg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
-
-        categoria = new Categoria();
-        categoria.setCodigoCategoria(4);
-        categoria.setNome("Limpeza");
-        categoria.setUrlFotoCategoria("Limpeza.jpg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
-
-        categoria = new Categoria();
-        categoria.setCodigoCategoria(5);
-        categoria.setNome("Cuidado Pessoal");
-        categoria.setUrlFotoCategoria("CuidadoPessoal.jpg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
-
-        categoria = new Categoria();
-        categoria.setCodigoCategoria(6);
-        categoria.setNome("Frios");
-        categoria.setUrlFotoCategoria("Frios.jpg");
-        myRef.child("categorias").child(Integer.toString(categoria.getCodigoCategoria())).setValue(categoria);
+        myRef.child("produtos").child(Integer.toString(categoria.getCodigoCategoria())).setValue(produto);
     }
 
     private void VerificarPermissao() {
@@ -466,8 +468,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constantes.REQUEST_MAIN) {
+            if(resultCode == Constantes.RESULT_REQUEST_LOGOUT) {
+                disconnectFromFacebook();
+            }
+        } else
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private boolean mayRequestContacts() {

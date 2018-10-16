@@ -46,6 +46,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
     private CustomBottomSheetBehavior bottomSheetBehavior;
     private ImageView ivCarrinho;
     private RecyclerView rvLogoSupermercados;
+    private List<ProdutoSupermercado> produtosCarrinho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

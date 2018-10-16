@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 
@@ -166,5 +167,48 @@ public class ProdutoDB {
     public void deletarProduto(int codProduto) {
         SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
         db.delete("PRODUTO","PRCODPRODUTO = "+codProduto,null);
+    }
+
+    public List<Produto> buscarProdutosPorCategoria(List<Categoria> filtros) {
+        BancoDeDados db = BancoDeDados.getInstance(contexto);
+        SQLiteDatabase dataBase = db.getReadableDatabase();
+
+
+        String[] projection = {
+                "PRCODPRODUTO",
+                "PRNOMEPRODUTO",
+                "PRURLFOTOPRODUTO"
+        };
+
+        String selection = "PRCODCATEGORIA IN (?)";
+
+        String[] selectionArgs = new String[filtros.size()];
+        for (int i=0;i<filtros.size();i++) {
+            selectionArgs[i] = Integer.toString(filtros.get(i).getCodigoCategoria());
+        }
+
+        Cursor cursor = dataBase.query(
+                "PRODUTO",
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        List<Produto> produtos = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Produto produto = new Produto();
+            produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
+            produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
+            produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+
+            produtos.add(produto);
+        }
+
+        cursor.close();
+
+        return produtos;
     }
 }

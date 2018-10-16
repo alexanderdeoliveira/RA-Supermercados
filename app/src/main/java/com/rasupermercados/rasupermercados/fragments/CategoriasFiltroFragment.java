@@ -1,5 +1,7 @@
 package com.rasupermercados.rasupermercados.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +34,8 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
     private FirebaseDatabase database;
     private List<Categoria> categorias;
     private AdapterListaCategoriasFiltros adapter;
+    private Button btAplicarFiltros;
+    private onAplicarFiltrosListener mAplicarFiltros;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +43,14 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
         View view = inflater.inflate(R.layout.fragment_categorias_filtro, container, false);
 
         RecyclerView rvCategorias = view.findViewById(R.id.rv_categorias);
+        btAplicarFiltros = view.findViewById(R.id.bt_aplicar_filtro);
+        btAplicarFiltros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         database = FirebaseDatabase.getInstance();
 
@@ -54,6 +67,23 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mAplicarFiltros = (onAplicarFiltrosListener) context;
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    public interface onAplicarFiltrosListener {
+        public void onAplicarFiltros(List<Categoria> filtros);
+    }
+
+
+    @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Categoria categoria = dataSnapshot.getValue(Categoria.class);
         CategoriaDB categoriaDB = CategoriaDB.getInstancia(getApplicationContext());
@@ -61,7 +91,6 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
             categoriaDB.salvarCategoria(categoria);
             categorias.add(categoria);
             adapter.notifyItemInserted(Integer.parseInt(dataSnapshot.getKey()));
-
         }
     }
 

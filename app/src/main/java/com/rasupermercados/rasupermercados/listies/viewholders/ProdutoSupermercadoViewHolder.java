@@ -35,7 +35,6 @@ public class ProdutoSupermercadoViewHolder extends RecyclerView.ViewHolder{
     private Spinner spinnerQtd;
 
     private Context contexto;
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public ProdutoSupermercadoViewHolder(Context context, View itemView) {
         super(itemView);
         this.contexto = context;

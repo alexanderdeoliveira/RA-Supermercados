@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ProdutoSupermercadoCarrinho {
     ProdutoSupermercado produtoSupermercado;
+    double quantidade;
     Date data;
 
     public void setData(Date data) {
@@ -13,6 +14,14 @@ public class ProdutoSupermercadoCarrinho {
 
     public void setProdutoSupermercado(ProdutoSupermercado produtoSupermercado) {
         this.produtoSupermercado = produtoSupermercado;
+    }
+
+    public void setQuantidade(double quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public double getQuantidade() {
+        return quantidade;
     }
 
     public Date getData() {
