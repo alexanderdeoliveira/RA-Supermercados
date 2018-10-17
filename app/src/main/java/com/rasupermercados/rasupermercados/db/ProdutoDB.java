@@ -116,7 +116,8 @@ public class ProdutoDB {
         String[] projection = {
                 "PRCODPRODUTO",
                 "PRNOMEPRODUTO",
-                "PRURLFOTOPRODUTO"
+                "PRURLFOTOPRODUTO",
+                "PRCODCATEGORIA"
         };
 
 
@@ -136,6 +137,7 @@ public class ProdutoDB {
             produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
             produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
             produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+            produto.setCategoria(new Categoria(cursor.getInt(cursor.getColumnIndex("PRCODCATEGORIA"))));
             produto.setProdutosSupermercado(buscarProdutosSupermercado(produto.getCodigo()));
 
             produtos.add(produto);
@@ -187,6 +189,7 @@ public class ProdutoDB {
         values.put("PRCODPRODUTO", produto.getCodigo());
         values.put("PRNOMEPRODUTO", produto.getNome());
         values.put("PRURLFOTOPRODUTO", produto.getUrlFotoStorage());
+        values.put("PRCODCATEGORIA", produto.getCategoria().getCodigoCategoria());
 
         db.insert("PRODUTO", null, values);
 
@@ -208,6 +211,7 @@ public class ProdutoDB {
         values.put("PRCODPRODUTO", produto.getCodigo());
         values.put("PRNOMEPRODUTO", produto.getNome());
         values.put("PRURLFOTOPRODUTO", produto.getUrlFotoStorage());
+        values.put("PRCODCATEGORIA", produto.getCategoria().getCodigoCategoria());
 
         return db.update("PRODUTO", values, "PRCODPRODUTO = " + produto.getCodigo(), null);
     }
@@ -226,7 +230,8 @@ public class ProdutoDB {
         String[] projection = {
                 "PRCODPRODUTO",
                 "PRNOMEPRODUTO",
-                "PRURLFOTOPRODUTO"
+                "PRURLFOTOPRODUTO",
+                "PRCODCATEGORIA"
         };
 
         String codigosCategorias = "0";
@@ -254,6 +259,7 @@ public class ProdutoDB {
             produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
             produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
             produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+            produto.setCategoria(new Categoria(cursor.getInt(cursor.getColumnIndex("PRCODCATEGORIA"))));
 
             produto.setProdutosSupermercado(buscarProdutosSupermercado(produto.getCodigo()));
 

@@ -36,7 +36,7 @@ public class BancoDeDados extends SQLiteOpenHelper {
                     "  PRCODPRODUTO    INTEGER" +
                     ", PRNOMEPRODUTO    TEXT     " +
                     ", PRURLFOTOPRODUTO    TEXT     " +
-                    ", PRCODCATEGORIA    TEXT     " +
+                    ", PRCODCATEGORIA    INTEGER     " +
                     ")");
 
             db.execSQL("CREATE TABLE CATEGORIA(" +
