@@ -9,7 +9,7 @@
     android:elevation="8dp"
     android:orientation="vertical"
     app:behavior_hideable="true"
-    app:behavior_minimumHeight="128dp"
+    app:behavior_minimumHeight="130dp"
     app:behavior_peekHeight="350dp"
     android:background="@drawable/bg_bottom_sheet"
     android:fitsSystemWindows="true"
@@ -21,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_carrinho"/>
+        android:layout_marginBottom="2dp"
+        android:src="@drawable/ic_dinheiro"/>
 
     <LinearLayout
         android:layout_width="match_parent"
