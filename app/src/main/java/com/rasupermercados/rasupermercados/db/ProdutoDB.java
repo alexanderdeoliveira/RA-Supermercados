@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
+import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
+import com.rasupermercados.rasupermercados.negocio.Supermercado;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 
 import java.util.ArrayList;
@@ -58,6 +60,8 @@ public class ProdutoDB {
             produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
             produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
             produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+
+            produto.setProdutosSupermercado(buscarProdutosSupermercado(produto.getCodigo()));
 
             cursor.close();
         }
@@ -132,6 +136,7 @@ public class ProdutoDB {
             produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
             produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
             produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+            produto.setProdutosSupermercado(buscarProdutosSupermercado(produto.getCodigo()));
 
             produtos.add(produto);
         }
@@ -139,6 +144,40 @@ public class ProdutoDB {
         cursor.close();
 
         return produtos;
+    }
+
+    public List<ProdutoSupermercado> buscarProdutosSupermercado(int codigoProduto) {
+        BancoDeDados db = BancoDeDados.getInstance(contexto);
+        SQLiteDatabase dataBase = db.getReadableDatabase();
+
+        String[] projection = {
+                "PSCODSUPERMERCADO",
+                "PSVALOR"
+        };
+
+        String selection =  "PSCODPRODUTO =  "+ codigoProduto;
+
+        Cursor cursor = dataBase.query(
+                "PRODUTOSUPERMERCADO",
+                projection,
+                selection,
+                null,
+                null,
+                null,
+                null
+        );
+
+        List<ProdutoSupermercado> produtosSupermercado = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Supermercado supermercado = new Supermercado(cursor.getInt(cursor.getColumnIndex("PSCODSUPERMERCADO")));
+            ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado(supermercado, cursor.getDouble(cursor.getColumnIndex("PSVALOR")));
+
+            produtosSupermercado.add(produtoSupermercado);
+        }
+
+        cursor.close();
+
+        return produtosSupermercado;
     }
 
     public void salvarProduto(Produto produto) {
@@ -150,6 +189,16 @@ public class ProdutoDB {
         values.put("PRURLFOTOPRODUTO", produto.getUrlFotoStorage());
 
         db.insert("PRODUTO", null, values);
+
+        for(int i =0; i< produto.getProdutosSupermercado().size();i++) {
+            values = new ContentValues();
+            values.put("PSCODPRODUTO", produto.getCodigo());
+            values.put("PSCODSUPERMERCADO", produto.getProdutosSupermercado().get(i).getSupermercado().getCodigo());
+            values.put("PSVALOR", produto.getProdutosSupermercado().get(i).getValor());
+
+            db.insert("PRODUTOSUPERMERCADO", null, values);
+        }
+
     }
 
     public int atualizarProduto(Produto produto) {
@@ -180,18 +229,20 @@ public class ProdutoDB {
                 "PRURLFOTOPRODUTO"
         };
 
-        String selection = "PRCODCATEGORIA IN (?)";
-
-        String[] selectionArgs = new String[filtros.size()];
+        String codigosCategorias = "0";
         for (int i=0;i<filtros.size();i++) {
-            selectionArgs[i] = Integer.toString(filtros.get(i).getCodigoCategoria());
+            codigosCategorias = codigosCategorias.concat(" , " + Integer.toString(filtros.get(i).getCodigoCategoria()));
         }
+
+        String selection = "PRCODCATEGORIA IN ("+ codigosCategorias +")";
+
+
 
         Cursor cursor = dataBase.query(
                 "PRODUTO",
                 projection,
                 selection,
-                selectionArgs,
+                null,
                 null,
                 null,
                 null
@@ -203,6 +254,8 @@ public class ProdutoDB {
             produto.setCodigo(cursor.getInt(cursor.getColumnIndex("PRCODPRODUTO")));
             produto.setNome(cursor.getString(cursor.getColumnIndex("PRNOMEPRODUTO")));
             produto.setUrlFotoStorage(cursor.getString(cursor.getColumnIndex("PRURLFOTOPRODUTO")));
+
+            produto.setProdutosSupermercado(buscarProdutosSupermercado(produto.getCodigo()));
 
             produtos.add(produto);
         }

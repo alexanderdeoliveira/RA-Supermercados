@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -57,7 +58,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
+import com.rasupermercados.rasupermercados.negocio.CategoriaFirebase;
 import com.rasupermercados.rasupermercados.negocio.Produto;
+import com.rasupermercados.rasupermercados.negocio.ProdutoFirebase;
+import com.rasupermercados.rasupermercados.negocio.SupermercadoFirebase;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 import com.rasupermercados.rasupermercados.utils.Constantes;
 
@@ -93,11 +97,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
     private ProgressDialog dialogLogin;
+    private Activity activity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = this;
 
         mAuth = FirebaseAuth.getInstance();
         if(buscarUsuarioLogado() == null) {
@@ -137,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    dialogLogin = ProgressDialog.show(getApplicationContext(), "", "Aguarde login...");
+                    dialogLogin = ProgressDialog.show(activity, "", "Aguarde login...");
                     handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
@@ -417,21 +424,422 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void enviarProdutos() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //AÇOUGUE
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
-        Categoria categoria = new Categoria();
+        CategoriaFirebase categoria = new CategoriaFirebase();
         categoria.setCodigoCategoria(1);
-        categoria.setNome("Açougue");
-        categoria.setUrlFotoCategoria("Acougue.jpg");
 
-        Produto produto = new Produto();
+        ProdutoFirebase produto = new ProdutoFirebase();
         produto.setCategoria(categoria);
         produto.setCodigo(1);
-        produto.setNome("Picanha");
+        produto.setNome("Peça de Picanha Bovina Congelada 1kg");
         produto.setUrlFotoStorage("Picanha.jpg");
 
-        myRef.child("produtos").child(Integer.toString(categoria.getCodigoCategoria())).setValue(produto);
+        double valor = 60.00;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(6);
+        produto.setNome("Bife de Contra Filé Bovino Entrecote Resfriado 1,3kg");
+        produto.setUrlFotoStorage("ContraFile.jpg");
+
+        valor = 50.19;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(11);
+        produto.setNome("Linguiça Calabresa com Pimenta 600g");
+        produto.setUrlFotoStorage("LinguicaCalabresa.jpg");
+
+        valor = 25.69;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(16);
+        produto.setNome("Linguiça de Frango com Bacon 600g");
+        produto.setUrlFotoStorage("LinguicaFrango.jpg");
+
+        valor = 19.89;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(21);
+        produto.setNome("Costela Congelada com Osso 1kg");
+        produto.setUrlFotoStorage("Costela.jpg");
+
+        valor = 29.90;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
+
+        //HORTIFRUTI
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        CategoriaFirebase categoria = new CategoriaFirebase();
+        categoria.setCodigoCategoria(2);
+
+        ProdutoFirebase produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(2);
+        produto.setNome("Laranja Pera 500g");
+        produto.setUrlFotoStorage("Laranja.jpg");
+
+        double valor = 1.39;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(7);
+        produto.setNome("Manga Palmer 1kg");
+        produto.setUrlFotoStorage("Manga.jpg");
+
+        valor = 8.99;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(12);
+        produto.setNome("Alface Lisa Orgânico 100g");
+        produto.setUrlFotoStorage("Alface.jpg");
+
+        valor = 6.99;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(17);
+        produto.setNome("Tomate 500g");
+        produto.setUrlFotoStorage("Tomate.jpg");
+
+        valor = 4.29;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(22);
+        produto.setNome("Pepino Comum 500g");
+        produto.setUrlFotoStorage("Pepino.jpg");
+
+        valor = 3.19;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
+
+        //BEBIDAS
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        CategoriaFirebase categoria = new CategoriaFirebase();
+        categoria.setCodigoCategoria(3);
+
+        ProdutoFirebase produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(3);
+        produto.setNome("Fanta Laranja 2 Litros");
+        produto.setUrlFotoStorage("FantaLaranja.jpg");
+
+        double valor = 4.49;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(8);
+        produto.setNome("Coca-Cola 1,5 Litros");
+        produto.setUrlFotoStorage("Coca.jpg");
+
+        valor = 6.49;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(13);
+        produto.setNome("Powerade Sabor Mix de Frutas 500ml");
+        produto.setUrlFotoStorage("Powerade.jpg");
+
+        valor = 3.59;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(18);
+        produto.setNome("Whisky Johnnie Walker Red Label 1 Litro");
+        produto.setUrlFotoStorage("RedLabel.jpg");
+
+        valor = 99.90;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(23);
+        produto.setNome("Cerveja Brahma Pilsen Lager 350ml");
+        produto.setUrlFotoStorage("Brahma.jpg");
+
+        valor = 2.59;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
+
+        //HIGIENE PESSOAL
+
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        CategoriaFirebase categoria = new CategoriaFirebase();
+        categoria.setCodigoCategoria(4);
+
+        ProdutoFirebase produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(4);
+        produto.setNome("Papel Higiênico Folha Dupla 30 Metros 16 Rolos");
+        produto.setUrlFotoStorage("PapelHigienico.jpg");
+
+        double valor = 27.99;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(9);
+        produto.setNome("Shampoo Infantil Johnson's Baby Original 400ml");
+        produto.setUrlFotoStorage("Shampoo.jpg");
+
+        valor = 15.58;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(14);
+        produto.setNome("Sabonete em Barra Corporal Dove Original 90g 6 Unidades");
+        produto.setUrlFotoStorage("Dove.jpg");
+
+        valor = 12.49;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(19);
+        produto.setNome("Sabonete Líquido Corporal Nivea Creme Soft Óleo de Amêndoa 250ml");
+        produto.setUrlFotoStorage("SaboneteLiquido.jpg");
+
+        valor = 7.69;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(24);
+        produto.setNome("Haste Flexível 75 Unidades");
+        produto.setUrlFotoStorage("HasteFlexivel.jpg");
+
+        valor = 3.39;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
+
+        //PADARIA
+
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        CategoriaFirebase categoria = new CategoriaFirebase();
+        categoria.setCodigoCategoria(5);
+
+        ProdutoFirebase produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(5);
+        produto.setNome("Pão de Forma 12 Grãos Zero Pullman 350g");
+        produto.setUrlFotoStorage("PaoForma.jpg");
+
+        double valor = 8.59;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(10);
+        produto.setNome("Pão de Queijo Massa Leve 400g");
+        produto.setUrlFotoStorage("PaoQueijo.jpg");
+
+        valor = 6.29;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(15);
+        produto.setNome("Bolo de Frappé Califórnia Pullman 250g");
+        produto.setUrlFotoStorage("BoloCalifornia.jpg");
+
+        valor = 6.59;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(20);
+        produto.setNome("Bolo de Chocolate Casa Suíça Zero 280g");
+        produto.setUrlFotoStorage("BoloChocolate.jpg");
+
+        valor = 17.69;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);
+
+        produto = new ProdutoFirebase();
+        produto.setCategoria(categoria);
+        produto.setCodigo(25);
+        produto.setNome("Mini Pão Francês Integral Light Congelado Brico Bread 300g");
+        produto.setUrlFotoStorage("MiniPaoFrances.jpg");
+
+        valor = 6.19;
+        for (int i=1;i<9;i++) {
+            SupermercadoFirebase supermercadoFirebase = new SupermercadoFirebase();
+            supermercadoFirebase.setCodigo(i);
+            supermercadoFirebase.setValor(valor+(i*0.30));
+            produto.addSupermercado(supermercadoFirebase);
+        }
+        myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
     }
 
     private void VerificarPermissao() {

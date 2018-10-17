@@ -50,10 +50,9 @@ public class CategoriaDB {
 
         List<Categoria> categorias = new ArrayList<>();
         while (cursor.moveToNext()) {
-            Categoria categoria = new Categoria();
-            categoria.setCodigoCategoria(cursor.getInt(cursor.getColumnIndex("CACODCOTEGORIA")));
+            int codigo = cursor.getInt(cursor.getColumnIndex("CACODCOTEGORIA"));
+            Categoria categoria = new Categoria(codigo);
             categoria.setNome(cursor.getString(cursor.getColumnIndex("CANOMECATEGORIA")));
-            categoria.setUrlFotoCategoria(cursor.getString(cursor.getColumnIndex("CAURLIMAGEMCATEGORIA")));
 
             categorias.add(categoria);
         }
@@ -66,7 +65,6 @@ public class CategoriaDB {
 
         ContentValues values = new ContentValues();
         values.put("CANOMECATEGORIA", categoria.getNome());
-        values.put("CAURLIMAGEMCATEGORIA", categoria.getUrlFotoCategoria());
 
         return db.update("CATEGORIA", values, "CACODCOTEGORIA = " + categoria.getCodigoCategoria(), null);
     }
@@ -77,7 +75,6 @@ public class CategoriaDB {
         ContentValues values = new ContentValues();
         values.put("CACODCOTEGORIA", categoria.getCodigoCategoria());
         values.put("CANOMECATEGORIA", categoria.getNome());
-        values.put("CAURLIMAGEMCATEGORIA", categoria.getUrlFotoCategoria());
 
         db.insert("CATEGORIA", null, values);
     }

@@ -5,7 +5,12 @@ import java.util.List;
 public class Categoria {
     int codigoCategoria;
     String nome;
-    String urlFotoCategoria;
+
+    public Categoria(){}
+
+    public Categoria(int codigoCategoria) {
+        setCodigoCategoria(codigoCategoria);
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -21,13 +26,5 @@ public class Categoria {
 
     public int getCodigoCategoria() {
         return codigoCategoria;
-    }
-
-    public void setUrlFotoCategoria(String urlFotoCategoria) {
-        this.urlFotoCategoria = urlFotoCategoria;
-    }
-
-    public String getUrlFotoCategoria() {
-        return urlFotoCategoria;
     }
 }

@@ -23,46 +23,60 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.db.CarrinhoDB;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
+import com.rasupermercados.rasupermercados.fragments.ConfirmarProdutoDialog;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercado;
+import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercadoCarrinho;
+import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercado;
+import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercadoCarrinho;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
 import com.rasupermercados.rasupermercados.utils.CustomBottomSheetBehavior;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetalhesProdutoActivity extends AppCompatActivity implements ChildEventListener {
+public class DetalhesProdutoActivity extends AppCompatActivity implements ConfirmarProdutoDialog.OnAdicionarAoCarrinhoListener {
 
     private RecyclerView rvProdutosSupermercado;
-    private List<ProdutoSupermercado> listaProdutosSupermercado = new ArrayList<>();
     private TextView tvNomeProduto;
-    private AdapterListaProdutosSupermercado mAdapter;
+    private AdapterListaProdutosSupermercadoCarrinho mAdapterItensCarrinho;
     private ImageView ivImagemProduto;
     private Context contexto;
-    private FirebaseDatabase database;
+
     private Produto produto;
     private CustomBottomSheetBehavior bottomSheetBehavior;
     private ImageView ivCarrinho;
-    private RecyclerView rvLogoSupermercados;
-    private List<ProdutoSupermercado> produtosCarrinho;
+    private RecyclerView rvItensCarrinho;
+    private TextView tvValorTotalCarrinho;
+    private Carrinho carrinho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_produto_2);
 
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        carrinho = CarrinhoDB.getInstancia(getApplicationContext()).buscarCarrinho();
+
 
         rvProdutosSupermercado = findViewById(R.id.rv_produto_supermercados);
+        rvItensCarrinho = findViewById(R.id.rv_itens_carrinho);
+        tvValorTotalCarrinho = findViewById(R.id.tv_valor_total_carrinho);
+
+        DecimalFormat df = new DecimalFormat("#0.00");
+        tvValorTotalCarrinho.setText("R$ " + (df.format(carrinho.getValorTotal()).replace(".", ",")));
+
         ivImagemProduto = findViewById(R.id.iv_produto);
         tvNomeProduto = findViewById(R.id.tv_nome_produto);
         ivCarrinho = findViewById(R.id.iv_carrinho);
 
         final LinearLayout bottomSheetLayout = findViewById(R.id.layout_bottom_sheet);
 
-        rvLogoSupermercados = findViewById(R.id.rv_logos_supermercados);
         /*mAdapterProdutPromocao = new AdapterListaLogoSupermercado(getApplicationContext(), produtosPromocao);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
@@ -71,7 +85,6 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
         rvPromocoes.setAdapter(mAdapterProdutPromocao);*/
 
         bottomSheetBehavior = CustomBottomSheetBehavior.from(bottomSheetLayout);
-
         bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setHideable(true);
 
@@ -99,34 +112,43 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
                 .load(mStorageProdutos.child(produto.getUrlFotoStorage()))
                 .into(ivImagemProduto);
 
-        mAdapter = new AdapterListaProdutosSupermercado(getApplicationContext(), listaProdutosSupermercado);
+        AdapterListaProdutosSupermercado mAdapterProdutosSupermercado = new AdapterListaProdutosSupermercado(getApplicationContext(), produto, getSupportFragmentManager());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvProdutosSupermercado.getContext(),
                 layoutManager.getOrientation());
         rvProdutosSupermercado.addItemDecoration(dividerItemDecoration);
         rvProdutosSupermercado.setLayoutManager(layoutManager);
-        rvProdutosSupermercado.setAdapter(mAdapter);
+        rvProdutosSupermercado.setAdapter(mAdapterProdutosSupermercado);
 
-        database = FirebaseDatabase.getInstance();
-
-        DatabaseReference refProdutos = database.getReference("produto_supermercado").child(Integer.toString(codigoProduto));
-
-        refProdutos.addChildEventListener(this);
-
+        mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho.getProdutoSupermercadoCarrinhos());
+        rvItensCarrinho.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        rvItensCarrinho.setAdapter(mAdapterItensCarrinho);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAdicionarAoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
+        //mAdapterItensCarrinho.addItem(produtoSupermercadoCarrinho);
+        carrinho.addProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
+        mAdapterItensCarrinho.notifyItemInserted(carrinho.getProdutoSupermercadoCarrinhos().size());
+
+        DecimalFormat df = new DecimalFormat("#0.00");
+        tvValorTotalCarrinho.setText("R$ " + (df.format(carrinho.getValorTotal()).replace(".", ",")));
+        bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_EXPANDED);
     }
 
 
-    @Override
+    /*@Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         DatabaseReference refSupermercados = database.getReference("supermercados").child(dataSnapshot.getKey());
 
@@ -136,11 +158,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Supermercado supermercado = dataSnapshot.getValue(Supermercado.class);
 
-                ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado();
-                produtoSupermercado.setValor(valorProduto);
-                produtoSupermercado.setSupermercado(supermercado);
-                produtoSupermercado.setProduto(produto);
-
+                ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado(supermercado, valorProduto);
                 mAdapter.addItem(produtoSupermercado);
             }
 
@@ -171,5 +189,5 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements ChildE
     public void onCancelled(DatabaseError databaseError) {
         String i = "";
 
-    }
+    }*/
 }

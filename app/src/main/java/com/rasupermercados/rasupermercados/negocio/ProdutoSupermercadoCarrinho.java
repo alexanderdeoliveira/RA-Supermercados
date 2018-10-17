@@ -4,28 +4,29 @@ import java.util.Date;
 import java.util.List;
 
 public class ProdutoSupermercadoCarrinho {
+    Produto produto;
     ProdutoSupermercado produtoSupermercado;
-    double quantidade;
-    Date data;
+    int quantidade;
 
-    public void setData(Date data) {
-        this.data = data;
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Produto getProduto() {
+        return produto;
     }
 
     public void setProdutoSupermercado(ProdutoSupermercado produtoSupermercado) {
         this.produtoSupermercado = produtoSupermercado;
     }
 
-    public void setQuantidade(double quantidade) {
+    public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
 
-    public double getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
-    }
-
-    public Date getData() {
-        return data;
     }
 
     public ProdutoSupermercado getProdutoSupermercado() {

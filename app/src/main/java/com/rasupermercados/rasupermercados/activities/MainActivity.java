@@ -37,10 +37,12 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.fragments.CategoriasFiltroFragment;
+import com.rasupermercados.rasupermercados.fragments.PagamentoFragment;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
+import com.rasupermercados.rasupermercados.negocio.ProdutoFirebase;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 
 import java.util.ArrayList;
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         layoutCarregando.setVisibility(View.GONE);
         rvProdutos.setVisibility(View.VISIBLE);
 
-        //refProdutos.addChildEventListener(this);
+        refProdutos.addChildEventListener(this);
 
     }
 
@@ -173,8 +175,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_logout) {
-            fazerLogout();
+        switch (id) {
+            case R.id.nav_logout:
+                fazerLogout();
+                break;
+
+            case R.id.nav_pagamento:
+                PagamentoFragment pagamentoFragment = new PagamentoFragment();
+                pagamentoFragment.show(getSupportFragmentManager(),"frag_pagamento");
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -210,7 +219,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-        Produto produto = dataSnapshot.getValue(Produto.class);
+        ProdutoFirebase produtoFirebase = dataSnapshot.getValue(ProdutoFirebase.class);
+        Produto produto = new Produto(produtoFirebase);
         ProdutoDB produtoDB = ProdutoDB.getInstancia(getApplicationContext());
         if(produtoDB.atualizarProduto(produto) == 0) {
             produtoDB.salvarProduto(produto);
@@ -224,10 +234,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-        Produto prodrutoAlterado = dataSnapshot.getValue(Produto.class);
+        ProdutoFirebase produtoFirebase = dataSnapshot.getValue(ProdutoFirebase.class);
+        Produto prodrutoAlterado = new Produto(produtoFirebase);
         produtos.get(Integer.parseInt(dataSnapshot.getKey())).setNome(prodrutoAlterado.getNome());
         produtos.get(Integer.parseInt(dataSnapshot.getKey())).setCodigo(prodrutoAlterado.getCodigo());
         produtos.get(Integer.parseInt(dataSnapshot.getKey())).setUrlFotoStorage(prodrutoAlterado.getUrlFotoStorage());
+        produtos.get(Integer.parseInt(dataSnapshot.getKey())).setCategoria(prodrutoAlterado.getCategoria());
 
         mAdapterProduto.notifyItemChanged(Integer.parseInt(dataSnapshot.getKey()));
 
@@ -235,7 +247,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Produto produto = dataSnapshot.getValue(Produto.class);
+        ProdutoFirebase produtoFirebase = dataSnapshot.getValue(ProdutoFirebase.class);
+        Produto produto = new Produto(produtoFirebase);
         produtos.remove(produto);
 
         ProdutoDB produtoDB = ProdutoDB.getInstancia(getApplicationContext());

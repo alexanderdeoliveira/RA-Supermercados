@@ -3,17 +3,18 @@ package com.rasupermercados.rasupermercados.negocio;
 import android.support.annotation.NonNull;
 
 public class ProdutoSupermercado {
-    Produto produto;
     Supermercado supermercado;
     double valor;
+
+    public ProdutoSupermercado(Supermercado supermercado, double valor) {
+        setSupermercado(supermercado);
+        setValor(valor);
+    }
 
     public void setValor(double valor) {
         this.valor = valor;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
 
     public void setSupermercado(Supermercado supermercado) {
         this.supermercado = supermercado;
@@ -21,10 +22,6 @@ public class ProdutoSupermercado {
 
     public double getValor() {
         return valor;
-    }
-
-    public Produto getProduto() {
-        return produto;
     }
 
     public Supermercado getSupermercado() {

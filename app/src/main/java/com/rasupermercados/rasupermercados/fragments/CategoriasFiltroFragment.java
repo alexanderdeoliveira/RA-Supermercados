@@ -47,7 +47,7 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
         btAplicarFiltros.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mAplicarFiltros.onAplicarFiltros(adapter.listaFiltros);
                 dismiss();
             }
         });
@@ -79,7 +79,7 @@ public class CategoriasFiltroFragment extends DialogFragment implements ChildEve
     }
 
     public interface onAplicarFiltrosListener {
-        public void onAplicarFiltros(List<Categoria> filtros);
+        void onAplicarFiltros(List<Categoria> filtros);
     }
 
 

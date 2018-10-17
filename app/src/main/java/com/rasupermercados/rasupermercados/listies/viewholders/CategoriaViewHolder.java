@@ -30,13 +30,13 @@ public class CategoriaViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setCategoria(final Categoria categoria, StorageReference mStorageCategoria) {
-        StorageReference categoriaRef = mStorageCategoria.child(categoria.getUrlFotoCategoria());
+        //StorageReference categoriaRef = mStorageCategoria.child(categoria.getUrlFotoCategoria());
         tvNomeCategoria.setText(categoria.getNome());
 
-        Glide.with(contexto)
+        /*Glide.with(contexto)
                 .using(new FirebaseImageLoader())
                 .load(categoriaRef)
-                .into(ivImagemCategoria);
+                .into(ivImagemCategoria);*/
 
         /*final long ONE_MEGABYTE = 1024 * 1024;
         produtoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {

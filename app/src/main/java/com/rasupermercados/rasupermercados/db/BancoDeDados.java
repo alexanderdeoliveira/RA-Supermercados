@@ -36,6 +36,7 @@ public class BancoDeDados extends SQLiteOpenHelper {
                     "  PRCODPRODUTO    INTEGER" +
                     ", PRNOMEPRODUTO    TEXT     " +
                     ", PRURLFOTOPRODUTO    TEXT     " +
+                    ", PRCODCATEGORIA    TEXT     " +
                     ")");
 
             db.execSQL("CREATE TABLE CATEGORIA(" +
@@ -48,6 +49,13 @@ public class BancoDeDados extends SQLiteOpenHelper {
                     "  PSCODPRODUTO    INTEGER " +
                     ", PSCODSUPERMERCADO    INTEGER " +
                     ", PSVALOR    INTEGER     " +
+                    ")");
+
+            db.execSQL("CREATE TABLE PRODUTOSUPERMERCADOCARRINHO(" +
+                    "  PCCODIGO INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    ", PCCODPRODUTO    INTEGER " +
+                    ", PCQUANTIDADE    INTEGER " +
+                    ", PCCODSUPERMERCADO    INTEGER     " +
                     ")");
 
 

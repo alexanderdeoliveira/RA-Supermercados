@@ -1,10 +1,44 @@
 package com.rasupermercados.rasupermercados.negocio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Produto {
     int codigo;
     String nome;
     Categoria categoria;
+    List<ProdutoSupermercado> produtosSupermercado;
     String urlFotoStorage;
+
+    public Produto(int codigo, String nome) {
+        setCodigo(codigo);
+        setNome(nome);
+    }
+
+    public Produto(ProdutoFirebase produtoFirebase) {
+        setCodigo(produtoFirebase.getCodigo());
+        setUrlFotoStorage(produtoFirebase.getUrlFotoStorage());
+        setCategoria(new Categoria(produtoFirebase.getCategoria().codigoCategoria));
+        setNome(produtoFirebase.getNome());
+
+        for(int i=0;i<produtoFirebase.getSupermercados().size();i++) {
+            SupermercadoFirebase supermercadoFirebase = produtoFirebase.getSupermercados().get(i);
+
+            ProdutoSupermercado produtoSupermercado = new ProdutoSupermercado(new Supermercado(supermercadoFirebase.codigo), supermercadoFirebase.getValor());
+            addProdutoSupermercado(produtoSupermercado);
+        }
+
+    }
+
+    public void setProdutosSupermercado(List<ProdutoSupermercado> produtosSupermercado) {
+        this.produtosSupermercado = produtosSupermercado;
+    }
+
+    public List<ProdutoSupermercado> getProdutosSupermercado() {
+        return produtosSupermercado;
+    }
+
+    public Produto() {}
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
@@ -28,6 +62,13 @@ public class Produto {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public void addProdutoSupermercado(ProdutoSupermercado produtoSupermercado) {
+        if(produtosSupermercado == null)
+            this.produtosSupermercado = new ArrayList<>();
+
+        this.produtosSupermercado.add(produtoSupermercado);
     }
 
     public String getUrlFotoStorage() {

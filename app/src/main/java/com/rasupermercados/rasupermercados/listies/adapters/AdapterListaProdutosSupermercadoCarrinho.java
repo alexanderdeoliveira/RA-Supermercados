@@ -28,11 +28,16 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
     @Override
     public ProdutoSupermercadoCarrinhoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_holder_produto_supermercado, parent, false);
+                .inflate(R.layout.view_holder_produto_supermercado_carrinho, parent, false);
 
         ProdutoSupermercadoCarrinhoViewHolder produtoViewHolder = new ProdutoSupermercadoCarrinhoViewHolder(contexto, view);
 
         return produtoViewHolder;
+    }
+
+    public void addItem(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
+        this.itens.add(produtoSupermercadoCarrinho);
+        notifyItemInserted(getItemCount());
     }
 
     @Override

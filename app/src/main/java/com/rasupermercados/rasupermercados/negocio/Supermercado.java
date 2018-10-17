@@ -5,6 +5,10 @@ public class Supermercado {
     String nome;
     String urlImagem;
 
+    public Supermercado(int codigo) {
+        setCodigo(codigo);
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }

@@ -1,15 +1,36 @@
 package com.rasupermercados.rasupermercados.negocio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Carrinho {
-    List<ProdutoSupermercado> produtoSupermercados;
+    List<ProdutoSupermercadoCarrinho> produtoSupermercadoCarrinhos;
+    double valorTotal;
 
-    public void setProdutoSupermercados(List<ProdutoSupermercado> produtoSupermercados) {
-        this.produtoSupermercados = produtoSupermercados;
+    public Carrinho() {
+        this.produtoSupermercadoCarrinhos = new ArrayList<>();
     }
 
-    public List<ProdutoSupermercado> getProdutoSupermercados() {
-        return produtoSupermercados;
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void addProdutoSupermercadoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
+        this.produtoSupermercadoCarrinhos.add(produtoSupermercadoCarrinho);
+
+        setValorTotal(this.valorTotal + produtoSupermercadoCarrinho.getQuantidade() * produtoSupermercadoCarrinho.getProdutoSupermercado().getValor());
+
+    }
+
+    public void setProdutoSupermercadoCarrinhos(List<ProdutoSupermercadoCarrinho> produtoSupermercadoCarrinhos) {
+        this.produtoSupermercadoCarrinhos = produtoSupermercadoCarrinhos;
+    }
+
+    public List<ProdutoSupermercadoCarrinho> getProdutoSupermercadoCarrinhos() {
+        return produtoSupermercadoCarrinhos;
     }
 }

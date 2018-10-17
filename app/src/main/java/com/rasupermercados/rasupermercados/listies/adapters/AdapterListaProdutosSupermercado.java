@@ -1,7 +1,9 @@
 package com.rasupermercados.rasupermercados.listies.adapters;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +23,14 @@ public class AdapterListaProdutosSupermercado extends RecyclerView.Adapter<Produ
     private List<ProdutoSupermercado> itens;
     private Context contexto;
     private StorageReference mStorage;
+    private FragmentManager fragmentManager;
+    private int codProduto;
 
-    public AdapterListaProdutosSupermercado(Context contexto, List<ProdutoSupermercado> itens) {
-        this.itens = itens;
+    public AdapterListaProdutosSupermercado(Context contexto, Produto produto, FragmentManager fm) {
+        this.itens = produto.getProdutosSupermercado();
         this.contexto = contexto;
+        this.fragmentManager = fm;
+        this.codProduto = produto.getCodigo();
 
     }
     @NonNull
@@ -33,7 +39,7 @@ public class AdapterListaProdutosSupermercado extends RecyclerView.Adapter<Produ
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_holder_produto_supermercado, parent, false);
 
-        ProdutoSupermercadoViewHolder produtoViewHolder = new ProdutoSupermercadoViewHolder(contexto, view);
+        ProdutoSupermercadoViewHolder produtoViewHolder = new ProdutoSupermercadoViewHolder(contexto, view,  fragmentManager, codProduto);
 
         return produtoViewHolder;
     }
