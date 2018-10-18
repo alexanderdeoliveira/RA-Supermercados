@@ -63,8 +63,6 @@ public class ConfirmarProdutoDialog extends DialogFragment {
                 produtoSupermercadoCarrinho.setProdutoSupermercado(new ProdutoSupermercado(new Supermercado(codigoSupermercado), valorProduto));
                 produtoSupermercadoCarrinho.setQuantidade(quantidade);
 
-                CarrinhoDB.getInstancia(getApplicationContext()).salvarProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
-
                 mAdicionarAoCarrinho.onAdicionarAoCarrinho(produtoSupermercadoCarrinho);
 
                 dismiss();

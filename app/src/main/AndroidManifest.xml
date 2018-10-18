@@ -52,9 +52,7 @@
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activities.CarrinhoActivity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".activities.CarrinhoActivity"></activity>
     </application>
 
 </manifest>

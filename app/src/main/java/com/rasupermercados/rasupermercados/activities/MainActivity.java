@@ -40,6 +40,7 @@ import com.rasupermercados.rasupermercados.fragments.CategoriasFiltroFragment;
 import com.rasupermercados.rasupermercados.fragments.PagamentoFragment;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
+import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoFirebase;
@@ -183,6 +184,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_pagamento:
                 PagamentoFragment pagamentoFragment = new PagamentoFragment();
                 pagamentoFragment.show(getSupportFragmentManager(),"frag_pagamento");
+                break;
+
+            case R.id.nav_carrinho:
+                startActivity(new Intent(this, CarrinhoActivity.class));
                 break;
         }
 

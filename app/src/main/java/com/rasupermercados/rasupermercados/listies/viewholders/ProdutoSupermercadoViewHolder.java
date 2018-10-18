@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +43,7 @@ public class ProdutoSupermercadoViewHolder extends RecyclerView.ViewHolder {
 
     private TextView tvValorProduto;
     private TextView tvNomeSupermercado;
-    private Spinner spinnerQtd;
+    private AppCompatSpinner spinnerQtd;
     private DatabaseReference refSupermercado;
     private FragmentManager fragmentManager;
 
