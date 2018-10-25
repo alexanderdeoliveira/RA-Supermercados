@@ -53,7 +53,10 @@
             android:id="@+id/bt_finalizar_compra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="20dp"
             android:layout_margin="8dp"
+            android:textColor="#FFFF"
+            android:backgroundTint="@color/colorPrimary"
             android:text="Finalizar compra"/>
 
     </LinearLayout>
