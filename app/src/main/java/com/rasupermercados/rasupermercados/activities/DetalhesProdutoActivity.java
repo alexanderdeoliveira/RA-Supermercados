@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,11 +23,13 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.CarrinhoDB;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.fragments.ConfirmarProdutoDialog;
+import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaLogoSupermercado;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercado;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercadoCarrinho;
 import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercadoCarrinho;
+import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
 import com.rasupermercados.rasupermercados.utils.CustomBottomSheetBehavior;
 import java.text.DecimalFormat;;
 
@@ -42,6 +45,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
     private CustomBottomSheetBehavior bottomSheetBehavior;
     private ImageView ivCarrinho;
     //private RecyclerView rvItensCarrinho;
+    private RecyclerView rvLogos;
     private TextView tvValorTotalCarrinho;
 
     @Override
@@ -55,8 +59,8 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
 
         rvProdutosSupermercado = findViewById(R.id.rv_produto_supermercados);
         //rvItensCarrinho = findViewById(R.id.rv_itens_carrinho);
-        tvValorTotalCarrinho = findViewById(R.id.tv_valor_total_carrinho);
 
+        tvValorTotalCarrinho = findViewById(R.id.tv_valor_total_carrinho);
         tvValorTotalCarrinho.setText(carrinho.getValorTotal());
 
         ivImagemProduto = findViewById(R.id.iv_produto);
@@ -68,6 +72,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
         bottomSheetBehavior = CustomBottomSheetBehavior.from(bottomSheetLayout);
         bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setHideable(true);
+        //bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_EXPANDED);
 
         ivCarrinho.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +105,13 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
         rvProdutosSupermercado.addItemDecoration(dividerItemDecoration);
         rvProdutosSupermercado.setLayoutManager(layoutManager);
         rvProdutosSupermercado.setAdapter(mAdapterProdutosSupermercado);
+
+        rvLogos = findViewById(R.id.rv_logos_supermercados);
+        AdapterListaLogoSupermercado mAdapterLogos = new AdapterListaLogoSupermercado(getApplicationContext(), CarrinhoDB.getInstancia(getApplicationContext()).buscarSupermercadoCarrinho());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvLogos.setLayoutManager(gridLayoutManager);
+        rvLogos.setAdapter(mAdapterLogos);
 
         mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho, tvValorTotalCarrinho);
         /*rvItensCarrinho.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));

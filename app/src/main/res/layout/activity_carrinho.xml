@@ -49,6 +49,13 @@
             android:layout_height="wrap_content"
             />
 
+        <Button
+            android:id="@+id/bt_finalizar_compra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Finalizar compra"/>
+
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

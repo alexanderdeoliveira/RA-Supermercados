@@ -63,15 +63,16 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_logos_supermercados"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_gravity="center"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_itens_carrinho"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             />
 
     </LinearLayout>

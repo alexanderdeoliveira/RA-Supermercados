@@ -20,33 +20,34 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.activities.MainActivity;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
+import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
 
 public class LogoSupermercadoViewHolder extends RecyclerView.ViewHolder{
 
     private ImageView ivImagemSupermercado;
     private DatabaseReference refSupermercado;
-    private StorageReference mStorageSupemercado;
+    private StorageReference mStorageSupermercados;
 
     private Context contexto;
     public LogoSupermercadoViewHolder(Context context, View itemView) {
         super(itemView);
         this.contexto = context;
 
-        ivImagemSupermercado = itemView.findViewById(R.id.iv_imagem_categoria);
+        ivImagemSupermercado = itemView.findViewById(R.id.iv_imagem_supermercado);
         refSupermercado = FirebaseDatabase.getInstance().getReference("supermercados");
-        mStorageSupemercado = FirebaseStorage.getInstance().getReference().child("supermercados");
+        mStorageSupermercados = FirebaseStorage.getInstance().getReference().child("supermercados");
     }
 
-    public void setSupermercado(Supermercado supermercado) {
-        DatabaseReference ref = refSupermercado.child(Integer.toString(supermercado.getCodigo())).child("urlImagem");
+    public void setSupermercadoCarrinho(SupermercadoCarrinho supermercadoCarrinho) {
+        DatabaseReference ref = refSupermercado.child(Integer.toString(supermercadoCarrinho.getSupermercado().getCodigo())).child("urlImagem");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                StorageReference supermecadoRef = mStorageSupemercado.child(dataSnapshot.getValue(String.class));
+                StorageReference supermercadoRef = mStorageSupermercados.child(dataSnapshot.getValue(String.class));
 
                 Glide.with(contexto)
                         .using(new FirebaseImageLoader())
-                        .load(supermecadoRef)
+                        .load(supermercadoRef)
                         .into(ivImagemSupermercado);
             }
 

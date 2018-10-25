@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -283,5 +283,11 @@ public class MainActivity extends AppCompatActivity
         layoutPromocoes.setVisibility(View.GONE);
         produtos = ProdutoDB.getInstancia(getApplicationContext()).buscarProdutosPorCategoria(filtros);
         mAdapterProduto.atualizarListaProdutos(produtos);
+
+        String texto = "";
+        for(int i = 0;i<filtros.size();i++) {
+            texto += filtros.get(i).getNome() + " ";
+        }
+        searchView.setQuery(texto, false);
     }
 }

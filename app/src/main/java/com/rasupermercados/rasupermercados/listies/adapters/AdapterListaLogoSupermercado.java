@@ -14,18 +14,17 @@ import com.rasupermercados.rasupermercados.listies.viewholders.CategoriaViewHold
 import com.rasupermercados.rasupermercados.listies.viewholders.LogoSupermercadoViewHolder;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
+import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
 
 import java.util.List;
 
 public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSupermercadoViewHolder> {
-    private List<Supermercado> supermercados;
+    private List<SupermercadoCarrinho> supermercados;
     private Context contexto;
-    private StorageReference mStorageSupermercados;
 
-    public AdapterListaLogoSupermercado(Context contexto, List<Supermercado> supermercados) {
+    public AdapterListaLogoSupermercado(Context contexto, List<SupermercadoCarrinho> supermercados) {
         this.supermercados = supermercados;
         this.contexto = contexto;
-        mStorageSupermercados = FirebaseStorage.getInstance().getReference().child("supermercados");
 
     }
     @NonNull
@@ -41,7 +40,7 @@ public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSuper
 
     @Override
     public void onBindViewHolder(@NonNull LogoSupermercadoViewHolder holder, int position) {
-        holder.setSupermercado(supermercados.get(position), mStorageSupermercados);
+        holder.setSupermercadoCarrinho(supermercados.get(position));
     }
 
     @Override

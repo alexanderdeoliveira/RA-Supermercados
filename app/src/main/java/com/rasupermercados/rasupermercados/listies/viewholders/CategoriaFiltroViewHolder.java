@@ -26,7 +26,6 @@ public class CategoriaFiltroViewHolder extends RecyclerView.ViewHolder{
         this.adapterListaCategoriasFiltros = adapterListaCategoriasFiltros;
         cbCategoria = itemView.findViewById(R.id.cb_categoria);
         tvNomeCategoria = itemView.findViewById(R.id.tv_nome_categoria);
-
     }
 
     public void setCategoria(final Categoria categoria) {
@@ -45,14 +44,10 @@ public class CategoriaFiltroViewHolder extends RecyclerView.ViewHolder{
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cbCategoria.isChecked()) {
+                if(cbCategoria.isChecked())
                     cbCategoria.setChecked(false);
-                    adapterListaCategoriasFiltros.listaFiltros.remove(categoria);
-                }
-                else {
+                else
                     cbCategoria.setChecked(true);
-                    adapterListaCategoriasFiltros.listaFiltros.add(categoria);
-                }
             }
         });
 

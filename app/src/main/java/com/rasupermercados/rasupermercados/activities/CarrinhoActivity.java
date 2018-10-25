@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.CarrinhoDB;
@@ -24,6 +25,7 @@ public class CarrinhoActivity extends AppCompatActivity {
     private AdapterListaProdutosSupermercadoCarrinho mAdapterItensCarrinho;
     private ItemTouchHelper itemTouchHelper;
     private CoordinatorLayout coordinatorLayout;
+    private Button btFinalizarCompra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class CarrinhoActivity extends AppCompatActivity {
 
         rvItensCarrinho = findViewById(R.id.rv_itens_carrinho);
         tvValorTotalCarrinho = findViewById(R.id.tv_valor_total_carrinho);
+        btFinalizarCompra = findViewById(R.id.bt_finalizar_compra);
 
         tvValorTotalCarrinho.setText(carrinho.getValorTotal());
 
