@@ -1,6 +1,7 @@
 package com.rasupermercados.rasupermercados.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -47,6 +48,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
     //private RecyclerView rvItensCarrinho;
     private RecyclerView rvLogos;
     private TextView tvValorTotalCarrinho;
+    private AdapterListaLogoSupermercado mAdapterLogos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +109,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
         rvProdutosSupermercado.setAdapter(mAdapterProdutosSupermercado);
 
         rvLogos = findViewById(R.id.rv_logos_supermercados);
-        AdapterListaLogoSupermercado mAdapterLogos = new AdapterListaLogoSupermercado(getApplicationContext(), CarrinhoDB.getInstancia(getApplicationContext()).buscarSupermercadoCarrinho());
+        mAdapterLogos = new AdapterListaLogoSupermercado(getApplicationContext(), CarrinhoDB.getInstancia(getApplicationContext()).buscarSupermercadoCarrinho());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvLogos.setLayoutManager(gridLayoutManager);
@@ -131,6 +133,10 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
             case android.R.id.home:
                 finish();
                 return true;
+
+            case R.id.abrir_carrinho:
+                startActivity(new Intent(this, CarrinhoActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -139,6 +145,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
     @Override
     public void onAdicionarAoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
         mAdapterItensCarrinho.addItem(produtoSupermercadoCarrinho);
+        mAdapterLogos.atualizarLista();
 
         tvValorTotalCarrinho.setText(mAdapterItensCarrinho.carrinho.getValorTotal());
         bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_EXPANDED);

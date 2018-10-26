@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
+import com.rasupermercados.rasupermercados.db.CarrinhoDB;
 import com.rasupermercados.rasupermercados.listies.viewholders.CategoriaViewHolder;
 import com.rasupermercados.rasupermercados.listies.viewholders.LogoSupermercadoViewHolder;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
@@ -26,6 +27,11 @@ public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSuper
         this.supermercados = supermercados;
         this.contexto = contexto;
 
+    }
+
+    public void atualizarLista() {
+        supermercados = CarrinhoDB.getInstancia(contexto).buscarSupermercadoCarrinho();
+        notifyDataSetChanged();
     }
     @NonNull
     @Override

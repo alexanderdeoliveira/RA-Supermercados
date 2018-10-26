@@ -25,6 +25,7 @@ import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
 public class LogoSupermercadoViewHolder extends RecyclerView.ViewHolder{
 
     private ImageView ivImagemSupermercado;
+    private TextView tvQtdProdutos;
     private DatabaseReference refSupermercado;
     private StorageReference mStorageSupermercados;
 
@@ -34,11 +35,13 @@ public class LogoSupermercadoViewHolder extends RecyclerView.ViewHolder{
         this.contexto = context;
 
         ivImagemSupermercado = itemView.findViewById(R.id.iv_imagem_supermercado);
+        tvQtdProdutos = itemView.findViewById(R.id.tvQtdProdutos);
         refSupermercado = FirebaseDatabase.getInstance().getReference("supermercados");
         mStorageSupermercados = FirebaseStorage.getInstance().getReference().child("supermercados");
     }
 
     public void setSupermercadoCarrinho(SupermercadoCarrinho supermercadoCarrinho) {
+        tvQtdProdutos.setText("x"+supermercadoCarrinho.getQtdProdutos());
         DatabaseReference ref = refSupermercado.child(Integer.toString(supermercadoCarrinho.getSupermercado().getCodigo())).child("urlImagem");
         ref.addValueEventListener(new ValueEventListener() {
             @Override

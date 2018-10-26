@@ -1,9 +1,15 @@
 package com.rasupermercados.rasupermercados.activities;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +24,8 @@ import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos
 import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercadoCarrinho;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class CarrinhoActivity extends AppCompatActivity {
 
     private RecyclerView rvItensCarrinho;
@@ -31,7 +39,6 @@ public class CarrinhoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrinho);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         coordinatorLayout = findViewById(R.id.layout_coodinator);
@@ -41,6 +48,18 @@ public class CarrinhoActivity extends AppCompatActivity {
         rvItensCarrinho = findViewById(R.id.rv_itens_carrinho);
         tvValorTotalCarrinho = findViewById(R.id.tv_valor_total_carrinho);
         btFinalizarCompra = findViewById(R.id.bt_finalizar_compra);
+        btFinalizarCompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CarrinhoDB.getInstancia(getApplicationContext()).deletarCarrinho();
+                finish();
+            }
+        });
+
+        if(carrinho.getProdutoSupermercadoCarrinhos().size() > 0)
+            btFinalizarCompra.setVisibility(View.VISIBLE);
+        else
+            btFinalizarCompra.setVisibility(View.GONE);
 
         tvValorTotalCarrinho.setText(carrinho.getValorTotal());
 
@@ -76,6 +95,17 @@ public class CarrinhoActivity extends AppCompatActivity {
                 snackbar.setActionTextColor(Color.RED);
 
                 snackbar.show();
+            }
+
+            public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,float dX, float dY,int actionState, boolean isCurrentlyActive){
+
+                new RecyclerViewSwipeDecorator.Builder(getApplicationContext(), c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.background_color_vermelho))
+                        .addActionIcon(R.drawable.ic_delete_white_24dp)
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         };
 

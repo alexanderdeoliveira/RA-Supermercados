@@ -89,7 +89,7 @@ public class CarrinhoDB {
                 null,
                 "PCCODSUPERMERCADO",
                 null,
-                "PCCODSUPERMERCADO"
+                "QUANTIDADE DESC"
         );
 
         List<SupermercadoCarrinho> lista = new ArrayList<>();
@@ -132,5 +132,11 @@ public class CarrinhoDB {
 
         String where = "PCCODPRODUTO = "+produtoSupermercadoCarrinho.getProduto().getCodigo() + " AND PCCODSUPERMERCADO = " + produtoSupermercadoCarrinho.getProdutoSupermercado().getSupermercado().getCodigo();
         return db.delete("PRODUTOSUPERMERCADOCARRINHO",where,null);
+    }
+
+    public void deletarCarrinho() {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        db.delete("PRODUTOSUPERMERCADOCARRINHO",null,null);
     }
 }
