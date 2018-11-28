@@ -33,6 +33,7 @@ import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.fragments.CategoriasFiltroFragment;
 import com.rasupermercados.rasupermercados.fragments.BannerFragment;
+import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaFiltrosAplicados;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
@@ -41,6 +42,7 @@ import com.rasupermercados.rasupermercados.negocio.ProdutoFirebase;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
 import com.rasupermercados.rasupermercados.utils.Constantes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView rvPromocoes;
     private AdapterListaProdutosPromocao mAdapterProdutPromocao;
     private LinearLayout layoutPromocoes;
+    private RecyclerView rvFiltros;
+    private AdapterListaFiltrosAplicados mAdapterFiltrosAplicados;
 
 
     @Override
@@ -120,8 +124,12 @@ public class MainActivity extends AppCompatActivity
 
         refProdutos.addChildEventListener(this);
 
-    }
+        rvFiltros = findViewById(R.id.rv_filtros);
+        rvFiltros.setLayoutManager(layoutManager);
+        mAdapterFiltrosAplicados = new AdapterListaFiltrosAplicados(this, new ArrayList<Categoria>());
+        rvFiltros.setAdapter(mAdapterFiltrosAplicados);
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -285,7 +293,9 @@ public class MainActivity extends AppCompatActivity
         String texto = "";
         for(int i = 0;i<filtros.size();i++) {
             texto += filtros.get(i).getNome() + " ";
+            mAdapterFiltrosAplicados.addItem(filtros.get(i));
         }
+        rvFiltros.setVisibility(View.VISIBLE);
         searchView.setQuery(texto, false);
     }
 }
