@@ -1,12 +1,8 @@
 package com.rasupermercados.rasupermercados.activities;
 
-import android.app.DialogFragment;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,16 +32,15 @@ import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
 import com.rasupermercados.rasupermercados.fragments.CategoriasFiltroFragment;
-import com.rasupermercados.rasupermercados.fragments.PagamentoFragment;
+import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutos;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosPromocao;
-import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Produto;
 import com.rasupermercados.rasupermercados.negocio.ProdutoFirebase;
 import com.rasupermercados.rasupermercados.negocio.Usuario;
+import com.rasupermercados.rasupermercados.utils.Constantes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -167,12 +161,15 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_pagamento:
-                PagamentoFragment pagamentoFragment = new PagamentoFragment();
-                pagamentoFragment.show(getSupportFragmentManager(),"frag_pagamento");
+                BannerFragment bannerFragment = new BannerFragment();
+                Bundle extras = new Bundle();
+                extras.putString("nome_imagem", "banner_pagamento.jpeg");
+                bannerFragment.setArguments(extras);
+                bannerFragment.show(getSupportFragmentManager(),"frag_pagamento");
                 break;
 
             case R.id.nav_carrinho:
-                startActivity(new Intent(this, CarrinhoActivity.class));
+                startActivityForResult(new Intent(this, CarrinhoActivity.class), 1);
                 break;
         }
 
@@ -181,10 +178,26 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            if(resultCode == 2) {
+                BannerFragment bannerFragment = new BannerFragment();
+                Bundle extras = new Bundle();
+                extras.putString("nome_imagem", "banner2.jpeg");
+                bannerFragment.setArguments(extras);
+                bannerFragment.show(getSupportFragmentManager(),"frag_pagamento");
+            }
+        }
+    }
+
     private void fazerLogout() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         UsuarioDB.getInstancia(getApplicationContext()).deletarUsuario();
+        setResult(Constantes.RESULT_REQUEST_LOGOUT);
         finish();
     }
 

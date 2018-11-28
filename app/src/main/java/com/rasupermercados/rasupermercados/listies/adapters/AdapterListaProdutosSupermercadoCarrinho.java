@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.storage.StorageReference;
@@ -26,11 +27,13 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
     public Carrinho carrinho;
     private Context contexto;
     private TextView tvValorTotal;
+    private Button btFinalizarCompra;
 
-    public AdapterListaProdutosSupermercadoCarrinho(Context contexto, Carrinho carrinho, TextView tvValorTotal) {
+    public AdapterListaProdutosSupermercadoCarrinho(Context contexto, Carrinho carrinho, TextView tvValorTotal, Button btFinalizar) {
         this.carrinho = carrinho;
         this.contexto = contexto;
         this.tvValorTotal = tvValorTotal;
+        this.btFinalizarCompra = btFinalizar;
     }
     @NonNull
     @Override
@@ -41,6 +44,10 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
         ProdutoSupermercadoCarrinhoViewHolder produtoViewHolder = new ProdutoSupermercadoCarrinhoViewHolder(contexto, view, this);
 
         return produtoViewHolder;
+    }
+
+    public void atualizarCarrinho() {
+        carrinho = CarrinhoDB.getInstancia(contexto).buscarCarrinho();
     }
 
     public void addItem(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
@@ -75,6 +82,13 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
         notifyItemRemoved(position);
 
         tvValorTotal.setText(this.carrinho.getValorTotal());
+
+        if(btFinalizarCompra != null) {
+            if (carrinho.getProdutoSupermercadoCarrinhos().size() == 0)
+                btFinalizarCompra.setVisibility(View.GONE);
+            else
+                btFinalizarCompra.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

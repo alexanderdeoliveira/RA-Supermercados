@@ -71,10 +71,13 @@ public class ProdutoSupermercadoCarrinhoViewHolder extends RecyclerView.ViewHold
         spQtdeProduto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int positionQtd, long id) {
-                if(positionQtd > 0 && positionQtd != item.getQuantidade()) {
-                    item.setQuantidade(positionQtd);
-                    mAdapter.alterarItem(position, item);
-                }
+                if(positionQtd > 0) {
+                    if(positionQtd != item.getQuantidade()) {
+                        item.setQuantidade(positionQtd);
+                        mAdapter.alterarItem(position, item);
+                    }
+                } else
+                    mAdapter.removeItem(position, item);
             }
 
             @Override

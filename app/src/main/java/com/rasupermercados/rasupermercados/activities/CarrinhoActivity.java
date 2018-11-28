@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.CarrinhoDB;
+import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercadoCarrinho;
 import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercadoCarrinho;
@@ -52,6 +53,7 @@ public class CarrinhoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CarrinhoDB.getInstancia(getApplicationContext()).deletarCarrinho();
+                setResult(2);
                 finish();
             }
         });
@@ -63,7 +65,7 @@ public class CarrinhoActivity extends AppCompatActivity {
 
         tvValorTotalCarrinho.setText(carrinho.getValorTotal());
 
-        mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho, tvValorTotalCarrinho);
+        mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho, tvValorTotalCarrinho, btFinalizarCompra);
         rvItensCarrinho.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         rvItensCarrinho.setAdapter(mAdapterItensCarrinho);
 
@@ -89,12 +91,18 @@ public class CarrinhoActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 mAdapterItensCarrinho.addItem(itemRemovido, positionItemRemovido);
+                                btFinalizarCompra.setVisibility(View.VISIBLE);
                             }
                         });
 
                 snackbar.setActionTextColor(Color.RED);
 
                 snackbar.show();
+
+                if(mAdapterItensCarrinho.carrinho.getProdutoSupermercadoCarrinhos().size() == 0)
+                    btFinalizarCompra.setVisibility(View.GONE);
+                else
+                    btFinalizarCompra.setVisibility(View.VISIBLE);
             }
 
             public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,float dX, float dY,int actionState, boolean isCurrentlyActive){

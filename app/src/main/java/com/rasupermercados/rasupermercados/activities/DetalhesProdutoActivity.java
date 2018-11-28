@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.CarrinhoDB;
 import com.rasupermercados.rasupermercados.db.ProdutoDB;
+import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.fragments.ConfirmarProdutoDialog;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaLogoSupermercado;
 import com.rasupermercados.rasupermercados.listies.adapters.AdapterListaProdutosSupermercado;
@@ -115,7 +116,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
         rvLogos.setLayoutManager(gridLayoutManager);
         rvLogos.setAdapter(mAdapterLogos);
 
-        mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho, tvValorTotalCarrinho);
+        mAdapterItensCarrinho = new AdapterListaProdutosSupermercadoCarrinho(getApplicationContext(), carrinho, tvValorTotalCarrinho, null);
         /*rvItensCarrinho.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         rvItensCarrinho.setAdapter(mAdapterItensCarrinho);*/
     }
@@ -135,7 +136,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
                 return true;
 
             case R.id.abrir_carrinho:
-                startActivity(new Intent(this, CarrinhoActivity.class));
+                startActivityForResult(new Intent(this, CarrinhoActivity.class), 1);
                 return true;
         }
 
@@ -143,9 +144,29 @@ public class DetalhesProdutoActivity extends AppCompatActivity implements Confir
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            mAdapterLogos.atualizarLista(getSupportFragmentManager());
+            mAdapterItensCarrinho.atualizarCarrinho();
+            tvValorTotalCarrinho.setText(mAdapterItensCarrinho.carrinho.getValorTotal());
+            bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_EXPANDED);
+
+            if (resultCode == 2) {
+                BannerFragment bannerFragment = new BannerFragment();
+                Bundle extras = new Bundle();
+                extras.putString("nome_imagem", "banner2.jpeg");
+                bannerFragment.setArguments(extras);
+                bannerFragment.show(getSupportFragmentManager(), "frag_pagamento");
+            }
+        }
+    }
+
+    @Override
     public void onAdicionarAoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
         mAdapterItensCarrinho.addItem(produtoSupermercadoCarrinho);
-        mAdapterLogos.atualizarLista();
+        mAdapterLogos.atualizarLista(getSupportFragmentManager());
 
         tvValorTotalCarrinho.setText(mAdapterItensCarrinho.carrinho.getValorTotal());
         bottomSheetBehavior.setState(CustomBottomSheetBehavior.STATE_EXPANDED);

@@ -57,6 +57,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.UsuarioDB;
+import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.CategoriaFirebase;
 import com.rasupermercados.rasupermercados.negocio.Produto;
@@ -129,7 +130,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailSignInButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    attemptLogin();
+                    //attemptLogin();
+
+                    BannerFragment bannerFragment = new BannerFragment();
+                    Bundle extras = new Bundle();
+                    extras.putString("nome_imagem", "banner_login.jpeg");
+                    bannerFragment.setArguments(extras);
+                    bannerFragment.show(getSupportFragmentManager(),"frag_pagamento");
                 }
             });
 
@@ -206,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Usuario usuario = new Usuario(user);
                             UsuarioDB.getInstancia(getApplicationContext()).salvarUsuario(usuario);
                             dialogLogin.dismiss();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivityForResult(new Intent(getApplicationContext(), MainActivity.class), Constantes.REQUEST_MAIN);
                         } else {
                             Toast.makeText(getApplicationContext(),"Não foi possível fazer login", Toast.LENGTH_SHORT).show();
                         }

@@ -1,7 +1,9 @@
 package com.rasupermercados.rasupermercados.listies.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rasupermercados.rasupermercados.R;
 import com.rasupermercados.rasupermercados.db.CarrinhoDB;
+import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.listies.viewholders.CategoriaViewHolder;
 import com.rasupermercados.rasupermercados.listies.viewholders.LogoSupermercadoViewHolder;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
@@ -29,8 +32,15 @@ public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSuper
 
     }
 
-    public void atualizarLista() {
+    public void atualizarLista(FragmentManager fragmentManager) {
         supermercados = CarrinhoDB.getInstancia(contexto).buscarSupermercadoCarrinho();
+        if(supermercados.size() == 1) {
+            BannerFragment bannerFragment = new BannerFragment();
+            Bundle extras = new Bundle();
+            extras.putString("nome_imagem", "banner1.jpeg");
+            bannerFragment.setArguments(extras);
+            bannerFragment.show(fragmentManager,"frag_pagamento");
+        }
         notifyDataSetChanged();
     }
     @NonNull
