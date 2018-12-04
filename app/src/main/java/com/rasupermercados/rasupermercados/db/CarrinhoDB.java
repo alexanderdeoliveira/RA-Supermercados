@@ -127,6 +127,46 @@ public class CarrinhoDB {
         return db.update("PRODUTOSUPERMERCADOCARRINHO", values, whereClause, null);
     }
 
+    public int addQuantidadeProdutoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("PCQUANTIDADE ", produtoSupermercadoCarrinho.getQuantidade());
+
+        String whereClause = "PCCODPRODUTO = " + produtoSupermercadoCarrinho.getProduto().getCodigo() + " AND PCCODSUPERMERCADO = " + produtoSupermercadoCarrinho.getProdutoSupermercado().getSupermercado().getCodigo();
+
+        return db.update("PRODUTOSUPERMERCADOCARRINHO", values, whereClause, null);
+    }
+
+    public int getQuantidadeProduto(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
+        SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
+
+        int retorno =0;
+
+        String[] projection = {
+                "PCQUANTIDADE"
+        };
+
+        Cursor cursor = db.query(
+                "PRODUTOSUPERMERCADOCARRINHO",
+                projection,
+                null,
+                null,
+                "PCCODSUPERMERCADO",
+                null,
+                null
+        );
+
+        List<SupermercadoCarrinho> lista = new ArrayList<>();
+        if (cursor.moveToNext()) {
+            retorno = cursor.getInt(0);
+        }
+
+        cursor.close();
+
+        return retorno;
+    }
+
     public int deletarProdutoCarrinho(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho) {
         SQLiteDatabase db = BancoDeDados.getInstance(contexto).getWritableDatabase();
 

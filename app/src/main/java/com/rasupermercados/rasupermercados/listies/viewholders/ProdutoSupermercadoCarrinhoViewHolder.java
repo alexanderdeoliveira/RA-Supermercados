@@ -93,7 +93,7 @@ public class ProdutoSupermercadoCarrinhoViewHolder extends RecyclerView.ViewHold
     private void preencherQtd() {
         List<String> listaQtds = new ArrayList<>();
 
-        for(int i=0; i<10;i++) {
+        for(int i=0; i<30;i++) {
             listaQtds.add(Integer.toString(i));
         }
 

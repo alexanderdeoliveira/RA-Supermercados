@@ -16,6 +16,7 @@ import com.rasupermercados.rasupermercados.db.CarrinhoDB;
 import com.rasupermercados.rasupermercados.fragments.BannerFragment;
 import com.rasupermercados.rasupermercados.listies.viewholders.CategoriaViewHolder;
 import com.rasupermercados.rasupermercados.listies.viewholders.LogoSupermercadoViewHolder;
+import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
 import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
@@ -34,13 +35,18 @@ public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSuper
 
     public void atualizarLista(FragmentManager fragmentManager) {
         supermercados = CarrinhoDB.getInstancia(contexto).buscarSupermercadoCarrinho();
-        if(supermercados.size() == 1) {
-            BannerFragment bannerFragment = new BannerFragment();
-            Bundle extras = new Bundle();
-            extras.putString("nome_imagem", "banner1.jpeg");
-            bannerFragment.setArguments(extras);
-            bannerFragment.show(fragmentManager,"frag_pagamento");
+
+        Carrinho carrinho = CarrinhoDB.getInstancia(contexto).buscarCarrinho();
+        if(carrinho.getProdutoSupermercadoCarrinhos() != null && carrinho.getProdutoSupermercadoCarrinhos().size() > 0) {
+            if(carrinho.getProdutoSupermercadoCarrinhos().get(0).getQuantidade() == 1) {
+                BannerFragment bannerFragment = new BannerFragment();
+                Bundle extras = new Bundle();
+                extras.putString("nome_imagem", "banner1.jpeg");
+                bannerFragment.setArguments(extras);
+                bannerFragment.show(fragmentManager,"frag_pagamento");
+            }
         }
+
         notifyDataSetChanged();
     }
     @NonNull

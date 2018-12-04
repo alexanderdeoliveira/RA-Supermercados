@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity
 
         refProdutos.addChildEventListener(this);
 
-        rvFiltros = findViewById(R.id.rv_filtros);
+        /*rvFiltros = findViewById(R.id.rv_filtros);
         rvFiltros.setLayoutManager(layoutManager);
         mAdapterFiltrosAplicados = new AdapterListaFiltrosAplicados(this, new ArrayList<Categoria>());
-        rvFiltros.setAdapter(mAdapterFiltrosAplicados);
+        rvFiltros.setAdapter(mAdapterFiltrosAplicados);*/
 
     }
 

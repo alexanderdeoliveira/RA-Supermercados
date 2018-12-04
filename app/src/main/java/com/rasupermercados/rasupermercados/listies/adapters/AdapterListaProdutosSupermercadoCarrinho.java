@@ -56,7 +56,10 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
 
         tvValorTotal.setText(this.carrinho.getValorTotal());
 
-        CarrinhoDB.getInstancia(contexto).salvarProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
+        int quantidade = CarrinhoDB.getInstancia(contexto).getQuantidadeProduto(produtoSupermercadoCarrinho);
+        produtoSupermercadoCarrinho.setQuantidade(produtoSupermercadoCarrinho.getQuantidade()+quantidade);
+        if(CarrinhoDB.getInstancia(contexto).addQuantidadeProdutoCarrinho(produtoSupermercadoCarrinho) == 0)
+            CarrinhoDB.getInstancia(contexto).salvarProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
     }
 
     public void addItem(ProdutoSupermercadoCarrinho produtoSupermercadoCarrinho, int position) {
@@ -65,7 +68,8 @@ public class AdapterListaProdutosSupermercadoCarrinho extends RecyclerView.Adapt
 
         tvValorTotal.setText(this.carrinho.getValorTotal());
 
-        CarrinhoDB.getInstancia(contexto).salvarProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
+        if(CarrinhoDB.getInstancia(contexto).addQuantidadeProdutoCarrinho(produtoSupermercadoCarrinho) == 0)
+            CarrinhoDB.getInstancia(contexto).salvarProdutoSupermercadoCarrinho(produtoSupermercadoCarrinho);
     }
 
     public void alterarItem(int position, ProdutoSupermercadoCarrinho produtoSupermercadoCarrinhoAlterado) {
