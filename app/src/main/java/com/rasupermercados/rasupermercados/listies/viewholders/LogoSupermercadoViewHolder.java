@@ -42,6 +42,7 @@ public class LogoSupermercadoViewHolder extends RecyclerView.ViewHolder{
 
     public void setSupermercadoCarrinho(SupermercadoCarrinho supermercadoCarrinho) {
         tvQtdProdutos.setText("x"+supermercadoCarrinho.getQtdProdutos());
+        ivImagemSupermercado.setVisibility(View.GONE);
         DatabaseReference ref = refSupermercado.child(Integer.toString(supermercadoCarrinho.getSupermercado().getCodigo())).child("urlImagem");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -52,6 +53,8 @@ public class LogoSupermercadoViewHolder extends RecyclerView.ViewHolder{
                         .using(new FirebaseImageLoader())
                         .load(supermercadoRef)
                         .into(ivImagemSupermercado);
+
+                ivImagemSupermercado.setVisibility(View.VISIBLE);
             }
 
             @Override

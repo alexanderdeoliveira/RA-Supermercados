@@ -60,8 +60,11 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView rvPromocoes;
     private AdapterListaProdutosPromocao mAdapterProdutPromocao;
     private LinearLayout layoutPromocoes;
-    private RecyclerView rvFiltros;
+    //private RecyclerView rvFiltros;
     private AdapterListaFiltrosAplicados mAdapterFiltrosAplicados;
+    private FloatingActionButton fab;
+    private View.OnClickListener filtrarListener;
+    private View.OnClickListener limparFiltrosListener;
 
 
     @Override
@@ -71,14 +74,29 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab_filtrar);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab = findViewById(R.id.fab_filtrar);
+
+        filtrarListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CategoriasFiltroFragment categoriasFiltroFragment = new CategoriasFiltroFragment();
                 categoriasFiltroFragment.show(getSupportFragmentManager(),"frag_filtros");
             }
-        });
+        };
+
+        limparFiltrosListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                produtos = ProdutoDB.getInstancia(getApplicationContext()).buscarProdutos();
+                mAdapterProduto.atualizarListaProdutos(produtos);
+                layoutPromocoes.setVisibility(View.VISIBLE);
+
+                fab.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_filter_list_black_24dp));
+                fab.setOnClickListener(filtrarListener);
+            }
+        };
+
+        fab.setOnClickListener(filtrarListener);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -114,9 +132,9 @@ public class MainActivity extends AppCompatActivity
         produtosPromocao = ProdutoDB.getInstancia(getApplicationContext()).buscarProdutos("CO");
         mAdapterProdutPromocao = new AdapterListaProdutosPromocao(getApplicationContext(), produtosPromocao);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rvPromocoes.setLayoutManager(layoutManager);
+        GridLayoutManager layoutManagerPromocoes = new GridLayoutManager(this, 1);
+        layoutManagerPromocoes.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvPromocoes.setLayoutManager(layoutManagerPromocoes);
         rvPromocoes.setAdapter(mAdapterProdutPromocao);
 
         layoutCarregando.setVisibility(View.GONE);
@@ -124,8 +142,10 @@ public class MainActivity extends AppCompatActivity
 
         refProdutos.addChildEventListener(this);
 
-        /*rvFiltros = findViewById(R.id.rv_filtros);
-        rvFiltros.setLayoutManager(layoutManager);
+        /*GridLayoutManager layoutManagerFiltros = new GridLayoutManager(this, 1);
+        layoutManagerFiltros.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvFiltros = findViewById(R.id.rv_filtros);
+        rvFiltros.setLayoutManager(layoutManagerFiltros);
         mAdapterFiltrosAplicados = new AdapterListaFiltrosAplicados(this, new ArrayList<Categoria>());
         rvFiltros.setAdapter(mAdapterFiltrosAplicados);*/
 
@@ -293,9 +313,11 @@ public class MainActivity extends AppCompatActivity
         String texto = "";
         for(int i = 0;i<filtros.size();i++) {
             texto += filtros.get(i).getNome() + " ";
-            mAdapterFiltrosAplicados.addItem(filtros.get(i));
+            //mAdapterFiltrosAplicados.addItem(filtros.get(i));
         }
-        rvFiltros.setVisibility(View.VISIBLE);
+        //rvFiltros.setVisibility(View.VISIBLE);
         searchView.setQuery(texto, false);
+        fab.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_deletar_filtro));
+        fab.setOnClickListener(limparFiltrosListener);
     }
 }

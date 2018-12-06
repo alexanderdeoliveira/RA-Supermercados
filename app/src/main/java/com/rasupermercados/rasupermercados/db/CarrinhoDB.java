@@ -144,13 +144,17 @@ public class CarrinhoDB {
         int retorno =0;
 
         String[] projection = {
-                "PCQUANTIDADE"
+                "PCQUANTIDADE",
+                "PCCODSUPERMERCADO"
+
         };
+
+        String selection =  "PCCODSUPERMERCADO = " + produtoSupermercadoCarrinho.getProdutoSupermercado().getSupermercado().getCodigo();
 
         Cursor cursor = db.query(
                 "PRODUTOSUPERMERCADOCARRINHO",
                 projection,
-                null,
+                selection,
                 null,
                 "PCCODSUPERMERCADO",
                 null,

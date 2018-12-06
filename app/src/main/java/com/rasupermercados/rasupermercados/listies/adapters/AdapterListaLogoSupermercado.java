@@ -18,6 +18,7 @@ import com.rasupermercados.rasupermercados.listies.viewholders.CategoriaViewHold
 import com.rasupermercados.rasupermercados.listies.viewholders.LogoSupermercadoViewHolder;
 import com.rasupermercados.rasupermercados.negocio.Carrinho;
 import com.rasupermercados.rasupermercados.negocio.Categoria;
+import com.rasupermercados.rasupermercados.negocio.ProdutoSupermercadoCarrinho;
 import com.rasupermercados.rasupermercados.negocio.Supermercado;
 import com.rasupermercados.rasupermercados.negocio.SupermercadoCarrinho;
 
@@ -37,18 +38,33 @@ public class AdapterListaLogoSupermercado extends RecyclerView.Adapter<LogoSuper
         supermercados = CarrinhoDB.getInstancia(contexto).buscarSupermercadoCarrinho();
 
         Carrinho carrinho = CarrinhoDB.getInstancia(contexto).buscarCarrinho();
-        if(carrinho.getProdutoSupermercadoCarrinhos() != null && carrinho.getProdutoSupermercadoCarrinhos().size() > 0) {
-            if(carrinho.getProdutoSupermercadoCarrinhos().get(0).getQuantidade() == 1) {
-                BannerFragment bannerFragment = new BannerFragment();
-                Bundle extras = new Bundle();
-                extras.putString("nome_imagem", "banner1.jpeg");
-                bannerFragment.setArguments(extras);
-                bannerFragment.show(fragmentManager,"frag_pagamento");
-            }
-        }
+        if(carrinho.getProdutoSupermercadoCarrinhos() != null && carrinho.getProdutoSupermercadoCarrinhos().size() > 0)
+            validarMostrarBanner(carrinho.getProdutoSupermercadoCarrinhos(), fragmentManager);
 
         notifyDataSetChanged();
     }
+
+    private void validarMostrarBanner(List<ProdutoSupermercadoCarrinho> listaProdutosSupermercado, FragmentManager fragmentManager) {
+        boolean mostrarBanner = true;
+        int quantidadeProdutosTotal = 0;
+
+        for(int i = 0; i<listaProdutosSupermercado.size();i++) {
+            quantidadeProdutosTotal += listaProdutosSupermercado.get(i).getQuantidade();
+            if(quantidadeProdutosTotal > 1) {
+                mostrarBanner = false;
+                break;
+            }
+        }
+
+        if(mostrarBanner || (!mostrarBanner && supermercados.size() == 1)) {
+            BannerFragment bannerFragment = new BannerFragment();
+            Bundle extras = new Bundle();
+            extras.putString("nome_imagem", "banner1.jpeg");
+            bannerFragment.setArguments(extras);
+            bannerFragment.show(fragmentManager,"frag_pagamento");
+        }
+    }
+
     @NonNull
     @Override
     public LogoSupermercadoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
