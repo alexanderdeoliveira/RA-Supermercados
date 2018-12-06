@@ -169,8 +169,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             startActivityForResult(new Intent(getApplicationContext(), MainActivity.class), Constantes.REQUEST_MAIN);
         }
 
+        VerificarPermissao();
+
         //enviarProdutos();
         //EnviarPlanilha();
+    }
+
+    private void VerificarPermissao() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE )
+                != PackageManager.PERMISSION_GRANTED ||  ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE )
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        0);
+            }
+        }
     }
 
     public void disconnectFromFacebook() {
@@ -849,7 +872,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         myRef.child("produtos").child(Integer.toString(produto.getCodigo())).setValue(produto);*/
     }
 
-    private void VerificarPermissao() {
+    /*private void VerificarPermissao() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE )
                 != PackageManager.PERMISSION_GRANTED ||  ContextCompat.checkSelfPermission(this,
@@ -870,7 +893,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         else
             EnviarPlanilha();
-    }
+    }*/
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

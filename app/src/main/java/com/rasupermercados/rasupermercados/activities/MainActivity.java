@@ -261,6 +261,9 @@ public class MainActivity extends AppCompatActivity
             Log.d("RA SUPERMERCADOS", "onChildAdded:" + dataSnapshot.getKey());
         }
 
+        produtosPromocao = ProdutoDB.getInstancia(getApplicationContext()).buscarProdutos("CO");
+        mAdapterProdutPromocao.notifyDataSetChanged();
+
     }
 
     @Override
